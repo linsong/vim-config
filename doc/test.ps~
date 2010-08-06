@@ -1,0 +1,1675 @@
+%!PS-Adobe-3.0
+%%Title: xpt.snippet.syn.txt
+%%For: Vincent Wang
+%%Creator: a2ps version 4.14
+%%CreationDate: Tue Apr 27 16:06:50 2010
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 7
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 7.493857 def
+/cw 4.496314 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 81.400000 mul
+def
+/ph
+   522.321860 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 0 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(*xpt-snippet-syntax*) p n
+() N
+() S 8 T () S 16 T () S 24 T (XPT Snippet Syntax) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (    by drdr.xp) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (     drdr.xp@gmail.com) N
+(==============================================================================) N
+() N
+() S 8 T (Content table:) N
+() S 8 T (|xpt-snippet-sample|) N
+() N
+() S 8 T (|xpt-snippet-header|) N
+() S 8 T () S 16 T (|xpt-snippet-priority|) N
+() S 8 T () S 16 T () S 24 T (|xpt-priority-value|) N
+() S 8 T () S 16 T () S 24 T (|xpt-priority-format|) N
+() S 8 T () S 16 T (|xpt-snippet-keyword|) N
+() S 8 T () S 16 T (|xpt-snippet-mark|) N
+() S 8 T (|xpt-snippet-variable|) N
+() S 8 T (|xpt-snippet-function|) N
+() S 8 T (|xpt-snippet-XPTinclude|) N
+() S 8 T (|xpt-snippet-embed|) N
+() N
+() S 8 T (|xpt-snippet|) N
+() S 8 T () S 16 T (|xpt-snippet-name|) N
+() S 8 T () S 16 T (|xpt-snippet-setting|) N
+() S 8 T () S 16 T (|xpt-snippet-hint|) N
+() S 8 T () S 16 T (|xpt-snippet-hidden|) N
+() S 8 T () S 16 T (|xpt-snippet-alias|) N
+() S 8 T () S 16 T (|xpt-snippet-synonym|) N
+() S 8 T () S 16 T (|xpt-snippet-wrap|) N
+() S 8 T () S 16 T (|xpt-snippet-wraponly|) N
+() S 8 T () S 16 T (|xpt-snippet-abbr|) N
+() N
+() N
+() S 8 T (|xpt-snippet-body|) N
+() S 8 T (|xpt-snippet-include|) N
+() S 8 T (|xpt-snippet-XSET|) N
+() S 8 T (|xpt-snippet-XSETm|) N
+() S 8 T (|xpt-snippet-ComeFirst|) N
+() S 8 T (|xpt-snippet-ComeLast|) N
+() S 8 T (|xpt-snippet-postQuoter|) N
+() N
+() N
+() S 8 T (|xpt-snippet-item|) N
+() S 8 T (|xpt-snippet-placeholder|) N
+() S 8 T (|xpt-placeholder-mark|) N
+() S 8 T () S 16 T (|xpt-placeholder-left-mark|   |`|) N
+() S 8 T () S 16 T (|xpt-placeholder-right-mark|  |^|) N
+() S 8 T (|xpt-placeholder-edge|) N
+() S 8 T (|xpt-snippet-leading-placeholder|) N
+() N
+() S 8 T (|xpt-placeholder-special|) N
+() S 8 T (|xpt-placeholder-cursor|) N
+() N
+() S 8 T (|xpt-snippet-expression|) N
+() S 8 T (|xpt-snippet-instant-value|) N
+() S 8 T (|xpt-snippet-preset-value|) N
+() S 8 T (|xpt-snippet-default-value|) N
+() S 8 T (|xpt-snippet-post-filter|) N
+() S 8 T () S 16 T (|xpt-snippet-default-post-filter|) N
+() S 8 T () S 16 T () S 24 T (|xpt-placeholder-optional-ph|) N
+() N
+() S 8 T (|xpt-placeholder-default-value|) N
+() S 8 T (|xpt-placeholder-post-filter|) N
+() S 8 T (|xpt-placeholder-ontime-filter|) N
+() N
+() S 8 T (|xpt-snippet-expandable|) N
+() S 8 T (|xpt-snippet-repetition|) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (  *xpt-snippet-sample*) N
+(xpt.snippet.syn.txt) (Page 1/13) (Apr 18, 10 23:50) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T (A snippet file looks like this : >) N
+() S 8 T () S 16 T (XPTemplate priority=lang keyword=$) S 56 T (| |xpt-snippet-header|) N
+() N
+() S 8 T () S 16 T (let s:f = XPTfuncs\(\)) S 40 T () S 48 T () S 56 T (| |xpt-snippet-function|) N
+() S 8 T () S 16 T ( ) N
+() S 8 T () S 16 T (XPTvar $TRUE          true) S 48 T () S 56 T (| |xpt-snippet-variable|) N
+() S 8 T () S 16 T (XPTvar $FALSE         false             |) N
+() S 8 T () S 16 T (XPTvar $NULL          null              |) N
+() S 8 T () S 16 T (XPTvar $UNDEFINED     undefined         |) N
+(                                                        |) N
+() S 8 T () S 16 T (XPTvar $CL  /*                          |) N
+() S 8 T () S 16 T (XPTvar $CM   *                          |) N
+() S 8 T () S 16 T (XPTvar $CR   */                         |) N
+(                                                        |) N
+() N
+() S 8 T () S 16 T (XPTinclude) S 32 T () S 40 T () S 48 T () S 56 T (| |xpt-snippet-XPTinclud) N
+(e|) N
+() S 8 T () S 16 T (      \\ _common/common                  |) N
+() S 8 T () S 16 T (      \\ _comment/doubleSign             |) N
+() S 8 T () S 16 T (      \\ _condition/c.like               |) N
+() N
+() S 8 T () S 16 T (fun! s:f.js_filename\(\)) S 40 T () S 48 T () S 56 T (| |xpt-snippet-function|) N
+() S 8 T () S 16 T () S 24 T (return expand\( "%" \)            |) N
+() S 8 T () S 16 T (endfunction                             |) N
+() N
+() S 8 T () S 16 T (XPTemplateDef) S 32 T () S 40 T () S 48 T () S 56 T (| |XPTemplateDef|) N
+() N
+() N
+() S 8 T () S 16 T (XPT cmt hint=/**\\ @auth...\\ */) S 48 T () S 56 T (| |xpt-snippet|) N
+() S 8 T () S 16 T (XSET author=$author                     | |xpt-snippet-XSET|) N
+() S 8 T () S 16 T (XSET email=$email                       | |xpt-snippet-XSET|) N
+() S 8 T () S 16 T (/**                                     |\\ ) N
+() S 8 T () S 16 T (* @author : `author^ | `email^          | \\) N
+() S 8 T () S 16 T (* @description                          |  +|xpt-snippet-body|) N
+() S 8 T () S 16 T (*     `cursor^                          | /) N
+() S 8 T () S 16 T (* @return {`Object^} `desc^             |/) N
+() S 8 T () S 16 T (*/) N
+() N
+() N
+() S 8 T () S 16 T (XPT for hint=for\\ \(var..;..;++\)) S 48 T () N
+() S 8 T () S 16 T (for \( i=0; i<`len^; ++i \) { `cursor^ }) N
+(<) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (  *xpt-snippet-header*) N
+() S 8 T (Each snippet file starts with a XPTemplate declaration for) N
+() S 8 T (snippet-scope setting, duplication load check, etc.) N
+() N
+() S 8 T (Format : >) N
+() S 8 T (XPTemplate [priority=lang] [keyword=#] [mark=`^]) N
+(<) N
+() S 8 T (There are 3 optional settings for 'XPTemplate' :) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (*xpt-snippet-priority*) N
+() S 8 T (Priority affects |xpt-snippet| and |xpt-snippet-variable|;) N
+() S 8 T (|xpt-snippet-function| is defined directly, so it isn't controlled by) N
+() S 8 T (|xpt-snippet-priority|. Snippets with a lower |xpt-snippet-priority|) N
+() S 8 T (override higher ones. Format : >) N
+() S 8 T () S 16 T (XPTemplate priority=<priority-value>) N
+(<) S 8 T (See |xpt-priority-value|.) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (  *xpt-priority-value*) N
+() S 8 T (Snippets are defined with a certain priority. One buffer might load) N
+() S 8 T (snippets with the same name. Only the snippet with the lowest priority) N
+() S 8 T (is used, others are ignored.) N
+() S 8 T (Priorities can be in the range from 0 to +oo. 0 is the highest) N
+() S 8 T (priority. Some predefined symbols stand for numeric priority) N
+() S 8 T (values : >) N
+() S 8 T () S 16 T (all) S 24 T () S 32 T (: 64) N
+() S 8 T () S 16 T (spec) S 24 T () S 32 T (: 48) N
+() S 8 T () S 16 T (like) S 24 T () S 32 T (: 32) N
+(xpt.snippet.syn.txt) (Page 2/13) (Apr 18, 10 23:50) title
+border
+grestore
+(Printed by Vincent Wang) rhead
+(xpt.snippet.syn.txt) (1/7) (Tuesday April 27, 2010) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3-4) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (lang) S 24 T () S 32 T (: 16) N
+() S 8 T () S 16 T (sub) S 24 T () S 32 T (: 8) N
+() S 8 T () S 16 T (personal) S 32 T (: 0) N
+(<) S 8 T (Default priority is "lang" or 16. ) N
+() S 8 T () N
+() S 8 T (You can set priority for each snippet by using |xpt-priority-format|.) N
+() S 8 T (Or set priority for all templates in the current file with) N
+() S 8 T (|XPTemplatePriority\(\)|.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T ( *xpt-priority-format*) N
+() S 8 T (Priority setting format : "priority[+/-[offset]]".) N
+() S 8 T (Following formats are all valid : >) N
+() S 8 T (3) S 16 T () S 24 T (3) N
+() S 8 T (lang) S 16 T () S 24 T (16) N
+() S 8 T (like+4) S 16 T () S 24 T (36 // like=32) N
+() S 8 T (all-) S 16 T () S 24 T (63 // all=64) N
+() S 8 T (all-1) S 16 T () S 24 T (63 // all=64) N
+(<) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T ( *xpt-snippet-keyword*) N
+() S 8 T (|xpt-snippet-keyword| specifies what other characters can be used as) N
+() S 8 T (|xpt-snippet-name|.) N
+() S 8 T (Format : >) N
+() S 8 T () S 16 T (XPTemplate keyword=...) N
+(<) S 8 T (For example, for C language keyword is set as : >) N
+() S 8 T () S 16 T (XPTemplate keyword=#) N
+(<) S 8 T (So that "#if" can be used as |xpt-snippet-name|.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-mark*) N
+() S 8 T (To specify which 2 characters are used as |xpt-placeholder-mark|) N
+() S 8 T (instead of the default |`| and |^|. Format : >) N
+() S 8 T () S 16 T (XPTemplate mark=~^) N
+(<) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (       *xpt-$*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (      *XPTvar*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (*xpt-snippet-variable*) N
+() S 8 T (|xpt-snippet-variable| can be used in :) N
+() S 8 T () S 16 T (|xpt-snippet-instant-value|) N
+() S 8 T () S 16 T (|xpt-snippet-preset-value|) N
+() S 8 T () S 16 T (|xpt-snippet-default-value|) N
+() S 8 T () S 16 T (|xpt-snippet-post-filter|) N
+() S 8 T () S 16 T (|xpt-placeholder-ontime-filter|) N
+() S 8 T (Format : >) N
+() S 8 T () S 16 T (XPTvar $VAR_NAME something) N
+(<) S 8 T (Or with single quoter : >) N
+() S 8 T () S 16 T (XPTvar $VAR_NAME 'something') N
+(<) S 8 T (The only difference is that in single quoted strings space can be) N
+() S 8 T (freely used.  Like this : >) N
+() S 8 T () S 16 T (XPTvar $VAR_NAME ' ') N
+(<) S 8 T (Instead of using the escaped format "\\ ".) N
+() N
+() S 8 T (It's also possible to set a variable to the empty value: >) N
+() S 8 T () S 16 T (XPTvar $VAR_NAME '') N
+(<) N
+() S 8 T (Another example from C language : >) N
+() S 8 T () S 16 T (XPTvar $TRUE 1) N
+(<) S 8 T (and a snippet defined as : >) N
+() S 8 T () S 16 T (XPT while1) N
+() S 8 T () S 16 T (while \(`$TRUE^\) {) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (will generate : >) N
+() S 8 T () S 16 T (while \(1\) {) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+(<) N
+() S 8 T (|xpt-snippet-variable| is used widely in XPTemplate, such as comment) N
+() S 8 T (definition, format customization, etc.) N
+() N
+() S 8 T (Personal information variables should be defined by using) N
+(xpt.snippet.syn.txt) (Page 3/13) (Apr 18, 10 23:50) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T (|g:xptemplate_vars|. Variables defined with |g:xptemplate_vars|) N
+() S 8 T (override variables defined in any snippet files.) N
+() N
+() S 8 T (NOTE) S 16 T (By convention the names of |xpt-snippet-variable| supplied by) N
+() S 8 T () S 16 T (XPTemplate start with an upper-case letter. User defined) N
+() S 8 T () S 16 T (variable name should start with a lower-case letter.) N
+() N
+() S 8 T (NOTE) S 16 T (Override control of |xpt-snippet-variable| is affected by) N
+() S 8 T () S 16 T (|xpt-snippet-priority|.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (*xpt-snippet-function*) N
+() S 8 T (|xpt-snippet-function| can be used in :) N
+() S 8 T () S 16 T (|xpt-snippet-instant-value|) N
+() S 8 T () S 16 T (|xpt-snippet-preset-value|) N
+() S 8 T () S 16 T (|xpt-snippet-default-value|) N
+() S 8 T () S 16 T (|xpt-snippet-post-filter|) N
+() S 8 T () S 16 T (|xpt-placeholder-ontime-filter|) N
+() S 8 T (To define |xpt-snippet-function|, the function container must be) N
+() S 8 T (fetched by using |XPTfuncs\(\)|. For example : >) N
+() S 8 T () S 16 T (let s:f = XPTfuncs\(\)) N
+() S 8 T () S 16 T (fun! s:f.c_printfElts\( v \)) N
+() S 8 T () S 16 T () S 24 T (...) N
+() S 8 T () S 16 T (endfunction) N
+(<) S 8 T (Then function 'c_printfElts' can be used in the snippet : >) N
+() S 8 T () S 16 T (XPT printf) S 32 T (hint=printf\\\(...\)) N
+() S 8 T () S 16 T (XSET elts=c_printfElts\( R\( 'pattern' \) \)) N
+() S 8 T () S 16 T (printf\( "`pattern^"`elts^ \)) N
+(<) N
+() S 8 T (NOTE) S 16 T (By convention the names of |xpt-snippet-function|s supplied by) N
+() S 8 T () S 16 T (XPTemplate start with an upper-case letter. User defined) N
+() S 8 T () S 16 T (function names should starts with a lower-case letter.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (  *XPTinclude*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (      *xpt-snippet-XPTinclude*) N
+() S 8 T (Syntax : >) N
+() S 8 T () S 16 T (XPTinclude <folder_name_in_ftplugin>/<filename>) N
+(<) S 8 T (The <filename> is only the file root, without ".xpt.vim". ) N
+() S 8 T (XPTinclude can include several snippets at one time.) N
+() N
+() S 8 T (NOTE do NOT use |:runtime| to include other snippet files. XPTinclude) N
+() S 8 T (handles snippet priority, but |:runtime| does NOT.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (    *XPTembed*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (   *xpt-snippet-embed*) N
+() S 8 T (Syntax : >) N
+() S 8 T () S 16 T (XPTembed <folder_name_in_ftplugin>/<filename>) N
+(<) S 8 T (|XPTembed| acts like |XPTinclude|, except it includes only snippet) N
+() S 8 T (files for nested languages, like JavaScript in HTML, or HTML in PHP.) N
+() N
+() S 8 T (NOTE TODO differences between XPTinclude by example.) N
+() N
+() N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T ( *XPTemplateDef* *xpt-snippet*) N
+() S 8 T (The snippet part starts with the command "XPTemplateDef". Any content) N
+() S 8 T (after this command is no longer Vim script, but a XPTemplate snippet.) N
+() N
+() S 8 T (Each |xpt-snippet| defines one code snippet with the following) N
+() S 8 T (syntax : >) N
+() S 8 T () S 16 T (XPT <snippetName> [name=value] [name=value] ..) N
+() S 8 T () S 16 T (<snippet body>..) N
+() S 8 T () S 16 T (..XPT) N
+(<) S 8 T ('XPT' is the start of a snippet. '..XPT' is the end of a snippet, it) N
+() S 8 T (is optional. If '..XPT' is not present the snippet body ends at the) N
+() S 8 T (last non-empty line.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-name*) N
+() S 8 T (<snippetName> is the name the user has to type to trigger this) N
+(xpt.snippet.syn.txt) (Page 4/13) (Apr 18, 10 23:50) title
+border
+grestore
+(Printed by Vincent Wang) rhead
+(xpt.snippet.syn.txt) (2/7) (Tuesday April 27, 2010) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5-6) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T (snippet. It can only contain characters defined in 'iskeyword' and) N
+() S 8 T (|xpt-snippet-keyword|. Custom snippets \(not provided by XPTemplate\)) N
+() S 8 T (should not start with "_" by convention as these snippets are used by) N
+() S 8 T (XPTemplate internally, see also |xpt-snippet-include|.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T ( *xpt-snippet-setting*) N
+() S 8 T (The 'name=value' defines snippet settings, including) N
+() S 8 T () S 16 T (|xpt-snippet-hint|) N
+() S 8 T () S 16 T (|xpt-snippet-hidden|) N
+() S 8 T () S 16 T (|xpt-snippet-alias|) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-hint*) N
+() S 8 T (Set the 'menu' entry for the pop up menu; as a short description other) N
+() S 8 T (than |xpt-snippet-name|. Like the following C language popup menu : >) N
+() S 8 T () S 16 T (| #if           #if ...           |) N
+() S 8 T () S 16 T (| #ifdef        #if ...           |) N
+() S 8 T () S 16 T (| #ifndef       #ifndef ..        |) N
+(<) S 8 T () N
+() S 8 T (Syntax to set up hints: >) N
+() S 8 T () S 16 T (XPT for hint=for\\ \(..;..;++\)) N
+(<) S 8 T (Or : >) N
+() S 8 T () S 16 T (XPT for " for \(..;..;++\)) N
+(<) S 8 T (The quote-hint must be at the end of |xpt-snippet| declaration.) N
+() N
+() S 8 T (Some characters\( space, left quote and "$" \) need to be escaped in) N
+() S 8 T (hint text: >) N
+() S 8 T () S 16 T () S 24 T () S 32 T (<space>) S 40 T (\() S 48 T ($) N
+() S 8 T () S 16 T (hint=) S 24 T () S 32 T (yes) S 40 T (yes) S 48 T (yes) N
+() S 8 T () S 16 T (") S 24 T () S 32 T (no) S 40 T (yes) S 48 T (yes) N
+(<) N
+() S 8 T (With only the 'hint=' way:) N
+() S 8 T () S 16 T (space needs to be escaped.) N
+() N
+() S 8 T (With both these two ways :) N
+() S 8 T () S 16 T ("\(" needs to be escaped if you do NOT want it to be evaluated) N
+() S 8 T () S 16 T (as a function call.) N
+() S 8 T () S 16 T ("$" needs to be escaped if you do NOT want it to be evaluated) N
+() S 8 T () S 16 T (as variable.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (  *xpt-snippet-hidden*) N
+() S 8 T (Set to 1 to prevent the snippet from being triggered by the user, but) N
+() S 8 T (it CAN be triggered from internal API, or included by other snippet.) N
+() S 8 T (Syntax: >) N
+() S 8 T () S 16 T (XPT for hidden=1 hint=...) N
+(<) S 8 T (Or: >) N
+() S 8 T () S 16 T (XPT for hidden hint=...) N
+(<) N
+() S 8 T (See |xpt-snippet-include| and |xpt-api|.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (   *xpt-snippet-alias*) N
+() S 8 T (Make the snippet an alias to another snippet. Syntax : >) N
+() S 8 T () S 16 T (XPT forin hint=for\\ ..\\ in\\ ..\\ ..\\ endfor) N
+() S 8 T () S 16 T (for `value^ in `list^) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (endfor) N
+() N
+() S 8 T () S 16 T (XPT foreach alias=forin hint=for\\ ..\\ in\\ ..\\ ..\\ endfor) N
+(<) S 8 T (This makes "forin" and "foreach" the same, but with possible different) N
+() S 8 T (settings.) N
+() N
+() S 8 T (NOTE |xpt-snippet-alias| can be used to create shortcuts.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T ( *xpt-snippet-synonym*) N
+() S 8 T (Like |xpt-snippet-alias|, synonym gives a snippet another name.) N
+() S 8 T (Syntax : >) N
+() S 8 T () S 16 T (XPT snippetName synonym=a|b|c...) N
+(<) S 8 T (Where a, b and c are all the names of this snippet. For example : >) N
+(xpt.snippet.syn.txt) (Page 5/13) (Apr 18, 10 23:50) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (XPT forin synonym=fin|fi hint=for\\ ..\\ in\\ ..\\ ..\\ endfor) N
+() S 8 T () S 16 T (for `value^ in `list^) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (endfor) N
+(<) S 8 T (This makes "forin", "fin" and "fi" the same.) N
+() N
+() S 8 T (NOTE |xpt-snippet-synonym| can be used to create shortcuts.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-wrap*) N
+() S 8 T (Wrapper snippets can be triggered in visual mode, place holder marked) N
+() S 8 T (as "wrap" is replaced with the text selected in visual mode.) N
+() N
+() S 8 T (Definition of wrapper snippet has no differences from normal) N
+() S 8 T (snippet except it declaring a place holder as wrapping holder. For) N
+() S 8 T (example: >) N
+() S 8 T () S 16 T (       ________/---------------------| wrapper declaration) N
+() S 8 T () S 16 T (XPT if wrap=job) N
+() S 8 T () S 16 T (if \(`condition^\){) N
+() S 8 T () S 16 T (    `job^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T () N
+() S 8 T (Wrapping can be block-wise or line-wise. Wrapper place holder with) N
+() S 8 T (|xpt-placeholder-edge| is line-wise, or it is block-wise.) N
+() N
+() S 8 T (For example: >) N
+() S 8 T () S 16 T (XPT comment wrap=what) N
+() S 8 T () S 16 T (`/* `what` */^) N
+(<) S 8 T (This is line-wise wrapper, it will result in: >) N
+() S 8 T () S 16 T (/* line1 */) N
+() S 8 T () S 16 T (/* line2 */) N
+(<) S 8 T (But not: >) N
+() S 8 T () S 16 T (/* line1) N
+() S 8 T () S 16 T (line2 */) N
+(<) N
+() S 8 T (See also |xpt-wrapper-snippet| and |xpt-snippet-wraponly|.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (*xpt-snippet-wraponly*) N
+() S 8 T (Normally, wrapper snippet can also be triggered in insert-mode, unless) N
+() S 8 T ("wraponly" declared. For example: >) N
+() S 8 T () S 16 T () S 24 T () S 32 T (________/------------| wrap only) N
+() S 8 T () S 16 T (XPT if wrap=job wraponly) N
+() S 8 T () S 16 T (if \(`condition^\){) N
+() S 8 T () S 16 T (    `job^) N
+() S 8 T () S 16 T (}) N
+(<) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-abbr*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T () S 64 T (   {default:0}) N
+() S 8 T (Set to 1 to create |abbreviations| for this snippet.) N
+() S 8 T (Example: >) N
+() S 8 T () S 16 T (       ____/------------------------| create abbr) N
+() S 8 T () S 16 T (XPT if abbr) N
+() S 8 T () S 16 T (if \(  \) {  }) N
+(<) S 8 T (Snippet defined as above will be triggered by typing "if<space>" or) N
+() S 8 T ("if<C-]>".) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-body*) N
+() S 8 T (<snippet body> is all the OTHER text except the first line : >) N
+() S 8 T () S 16 T (XPT for hint=for\\ \(..;..;++\)) N
+() S 8 T () S 16 T (for \(`i^ = `0^; `i^ < `len^; ++`i^\) { |) N
+() S 8 T () S 16 T (    `cursor^                          | snippet body) N
+() S 8 T () S 16 T (}                                     |) N
+() N
+(<) S 8 T (|xpt-snippet-body| contains snippet text and :) N
+() S 8 T () S 16 T (|xpt-snippet-XSET|) N
+() S 8 T () S 16 T (|xpt-snippet-XSETm|) N
+() S 8 T (Snippet with XSET command : >) N
+() N
+(xpt.snippet.syn.txt) (Page 6/13) (Apr 18, 10 23:50) title
+border
+grestore
+(Printed by Vincent Wang) rhead
+(xpt.snippet.syn.txt) (3/7) (Tuesday April 27, 2010) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7-8) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (XPT printf) S 32 T (hint=printf\\\(...\)) N
+() S 8 T () S 16 T (XSET elts=c_printfElts\( R\( 'pattern' \) \)) N
+() S 8 T () S 16 T (printf\( "`pattern^"`elts^ \)) N
+() N
+(<) S 8 T (NOTE XSET/XSETm commands can be placed anywhere inside a snippet.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (       *`::^* *Include:* *xpt-snippet-include*) N
+() S 8 T (`:<snipname>:^) S 24 T () S 32 T (Simple Include without "cursor".) N
+() S 8 T (`Include:<snipname>^) S 32 T (Include with "cursor" place holder.) N
+() N
+() S 8 T (`:<snipname>\(\):^) S 32 T (Simple inclusion with parameter.) N
+() S 8 T (`Include:<snipname>\(\)^) S 32 T (Inclusion with parameter.) N
+() N
+() S 8 T (Snippet can include another snippet, through inclusion place holder : >) N
+() N
+() S 8 T () S 16 T (`Include:snippetName^) N
+() N
+(<) S 8 T (When inclusion occurs, |xpt-snippet-post-filter|,) N
+() S 8 T (|xpt-snippet-default-value| and |xpt-snippet-preset-value| is imported) N
+() S 8 T (too, if it does not override.) N
+() N
+() S 8 T (Short inclusion format : >) N
+() S 8 T () S 16 T (`:snippetName:^) N
+(<) S 8 T (Only two ":" around snippet name are needed.) N
+() N
+() S 8 T (NOTE) S 16 T (The only difference between "Include:" and "::" is "Include:") N
+() S 8 T () S 16 T (keeps "cursor" place holder but "::" does not.) N
+() N
+() S 8 T (Take "if" snippet in file "_condition/c.like.xpt.vim" for example\() N
+() S 8 T (snippets are simplified for reading \): >) N
+() S 8 T () S 16 T (XPT _if hidden) N
+() S 8 T () S 16 T (if \( `condition^ \) {) N
+() S 8 T () S 16 T (    `job^) N
+() S 8 T () S 16 T (}) N
+() N
+() S 8 T () S 16 T (XPT if hint=if\\ \(..\)\\ {..}\\ else...) N
+() S 8 T () S 16 T (`:_if:^` `else...{{^ `Include:else^`}}^) N
+() N
+(<) S 8 T (The real "if" includes the "_if" and "else" snippets.) N
+() S 8 T () N
+() S 8 T (NOTE) S 16 T (Inclusion is literal, so that snippets with different) N
+() S 8 T () S 16 T (|xpt-snippet-mark| can not include each other.) N
+() N
+() S 8 T (NOTE) S 16 T (By convention snippets of name started with "_" are internal) N
+() S 8 T () S 16 T (snippets. Normally these snippets are set with) N
+() S 8 T () S 16 T (|xpt-snippet-hidden| flag on and used for inclusion only.) N
+() N
+() S 8 T (Parameters of Inclusion:) N
+() N
+() S 8 T (Inclusion can have parameters passed to included snippet. Parameters) N
+() S 8 T (are name-value pairs. Names are placeholder name. Name-Values presents) N
+() S 8 T (in form of |Dictionary|:) N
+() S 8 T () S 16 T (`:<snipname>\( { '<phname>' : '<new_phname>', ... } \):^) N
+() S 8 T (Place holders in sub-snippet presents in parameter are replaced.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-XSET*) N
+() S 8 T (In |xpt-snippet-body| XSET commands can be used anywhere to set : ) N
+() S 8 T () S 16 T (|xpt-snippet-preset-value|) N
+() S 8 T () S 16 T (|xpt-snippet-default-value|) N
+() S 8 T () S 16 T (|xpt-snippet-post-filter|) N
+() S 8 T (XSET syntax to set |xpt-snippet-preset-value|: >) N
+() S 8 T () S 16 T (XSET itemname|pre=<expression>) N
+(<) S 8 T (XSET syntax to set |xpt-snippet-default-value|: >) N
+() S 8 T () S 16 T (XSET itemname|def=<expression>) N
+(<) S 8 T (or : >) N
+() S 8 T () S 16 T (XSET itemname=<expression>) N
+(<) S 8 T (XSET syntax to set |xpt-snippet-post-filter|: >) N
+(xpt.snippet.syn.txt) (Page 7/13) (Apr 18, 10 23:50) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (XSET itemname|post=<expression>) N
+(<) S 8 T (<expression> is |xpt-snippet-expression|. For example : >) N
+() S 8 T () S 16 T (XPT #include_user) S 40 T (hint=include\\ "") N
+() S 8 T () S 16 T (XSET me=fileRoot\(\)) N
+() S 8 T () S 16 T (#include "`me^.h") N
+(<) S 8 T (Item "me" is set to the file name without extension.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (   *xpt-snippet-XSETm*) N
+() S 8 T ("XSETm" is similar to |xpt-snippet-XSET| except it uses "\\n" instead) N
+() S 8 T (of "=" in |xpt-snippet-XSET| and ends with "XSETm END". For) N
+() S 8 T (example : >) N
+() S 8 T () S 16 T (XPT if) S 24 T () S 32 T (hint=if\\ \(..\)\\ {..}\\ else...) N
+() S 8 T () S 16 T (if \(`condition^\) { ) N
+() S 8 T () S 16 T (    `job^) N
+() S 8 T () S 16 T (}` `else...^) N
+() S 8 T () S 16 T (XSETm else...|post) N
+() S 8 T () S 16 T (else { ) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (XSETm END) N
+(<) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (       *xpt-snippet-ComeFirst*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (*xpt-snippet-ComeLast*) N
+() S 8 T (Special XSET keys "ComeFirst" and "ComeLast" specify the item render) N
+() S 8 T (order. Their value is a list of place holder names separated by space.) N
+() S 8 T (For example : >) N
+() S 8 T () S 16 T (XPT for hint=for\\ \(..;..;++\)) N
+() S 8 T () S 16 T (XSET ComeFirst=0 len) N
+() S 8 T () S 16 T (for \(`i^ = `0^; `i^ < `len^; ++`i^\)`$BRloop^{) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (So that "0" is focused first, then "len" and then "i".) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (      *xpt-snippet-postQuoter*) N
+() S 8 T (The key "postQuoter" is designed to specify quoter do define) N
+() S 8 T (|xpt-snippet-expandable|. Default is "{{,}}".) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (    *xpt-snippet-item*) N
+() S 8 T (In one snippet a group of |xpt-snippet-placeholder|s with the same) N
+() S 8 T (name is an "item". For example : >) N
+() S 8 T () S 16 T (XPT for hint=for\\ \(..;..;++\)) N
+() S 8 T () S 16 T (for \(`i^ = `0^; `i^ < `len^; ++`i^\) {) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (In this snippet there are 4 items : >) N
+() S 8 T () S 16 T (i, 0, len, cursor) N
+(<) S 8 T (Item "i" has 3 |xpt-snippet-placeholder|s, the others have only 1.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (     *xpt-snippet-placeholder*) N
+() S 8 T (A place holder is a segment of a snippet which can be changed by the) N
+() S 8 T (user. It's tracked by XPTemplate to update the user input of) N
+() S 8 T (|xpt-snippet-placeholder|s within the same |xpt-snippet-item|.) N
+() N
+() S 8 T (The place holders are defined by |xpt-placeholder-mark|, by default) N
+() S 8 T (|`| and |^| are used. For example : >) N
+() S 8 T () S 16 T (XPT for hint=for\\ \(..;..;++\)) N
+() S 8 T () S 16 T (for \(`i^ = `0^; `i^ < `len^; ++`i^\) {) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (Sequentially, the place holders in this snippet are : >) N
+() S 8 T () S 16 T (i, 0, i, len, i, cursor) N
+(< ) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (      *xpt-placeholder-left-mark*  *`*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     *xpt-placeholder-right-mark*  *^*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T () S 56 T (*xpt-placeholder-mark*) N
+() S 8 T (|xpt-placeholder-mark| are the characters used to define) N
+() S 8 T (|xpt-snippet-placeholder|s of a snippet, by default |`| and |^|.) N
+() S 8 T (Or the |xpt-placeholder-left-mark| and |xpt-placeholder-right-mark|.) N
+(xpt.snippet.syn.txt) (Page 8/13) (Apr 18, 10 23:50) title
+border
+grestore
+(Printed by Vincent Wang) rhead
+(xpt.snippet.syn.txt) (4/7) (Tuesday April 27, 2010) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (9-10) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T (They can be changed locally, for the current snippet file, by) N
+() S 8 T (|xpt-snippet-mark|.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T (      *```*   *xpt-```* *xpt-placeholder-edge*) N
+() S 8 T (Besides |`| and |^|, additional |xpt-placeholder-left-mark|s can be) N
+() S 8 T (set inside place holder to add additional information: the edge.) N
+() N
+() S 8 T (Edge is some text around a place holder that is not selected when the) N
+() S 8 T (cursor jumps to this place holder, but it still can be edited. For) N
+() S 8 T (example : >) N
+() S 8 T () S 16 T (`\(`xpt`\)^) N
+(<) S 8 T (This place holder is named "xpt" and the edges are "\(" and "\)". When) N
+() S 8 T (the cursor jumps onto it : >) N
+() S 8 T () S 16 T (\(xpt\)) N
+() S 8 T () S 16 T ( ***------ only xpt is selected) N
+(<) S 8 T (Edges help with formatting issues.) N
+() N
+() S 8 T (Place holder can have only a left edge, for example : >) N
+() S 8 T () S 16 T (`\(`xpt^) N
+(<) N
+() S 8 T (NOTE only |\\_W| characters are acceptable in edges.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     *xpt-snippet-leading-placeholder*) N
+() S 8 T (In an item one place holder is the leading place holder which accepts) N
+() S 8 T (user input. Others are update by XPTemplate automatically.) N
+() N
+() S 8 T (By default, the first place holder in item is the leading place) N
+() S 8 T (holder, or the one with a |xpt-placeholder-edge|. This allows it to) N
+() S 8 T (specify which place holder is the edit area.) N
+() S 8 T (For example : >) N
+() S 8 T () S 16 T (for \(`i^ = `0^; `i^ < `len^; ++`i^\) {) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (In item "i", the first "i" before "=" is the leading one. But in this) N
+() S 8 T (snippet : >) N
+() S 8 T () S 16 T (for \(`i^ = `0^; ``i^ < `len^; ++`i^\) {) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (The second "i", with double |`| before "<", is the leading one.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (     *xpt-placeholder-special*) N
+() S 8 T (Special place holders include : |xpt-placeholder-cursor| and) N
+() S 8 T (|xpt-snippet-wrap|.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T ( *`cursor^*   *xpt-placeholder-cursor*) N
+() S 8 T (Sets where cursor the stops after a snippet finished.) N
+() N
+() S 8 T (The item named "cursor" is a special one. It's always selected at last) N
+() S 8 T (and replaced with an empty string. When navigating to the "cursor") N
+() S 8 T (item the snippet is complete.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T ( *xpt-{}* *xpt-mixed* *xpt-snippet-expression*) N
+() S 8 T (Expression is a mixture of plain text, |xpt-snippet-variable| and) N
+() S 8 T (|xpt-snippet-function|. ) N
+() S 8 T (Expression is used as the value of) N
+() S 8 T () S 16 T (|xpt-snippet-instant-value|) N
+() S 8 T () S 16 T (|xpt-snippet-preset-value|) N
+() S 8 T () S 16 T (|xpt-snippet-default-value|) N
+() S 8 T () S 16 T (|xpt-snippet-post-filter|) N
+() S 8 T () S 16 T (|xpt-placeholder-ontime-filter|.) N
+() N
+() S 8 T (Functions can be |xpt-snippet-function|s defined as member of) N
+() S 8 T (|XPTfuncs\(\)| or native Vim functions.) N
+() N
+() S 8 T (Functions are called as member of rendering context :) N
+() S 8 T (|xpt-snippet-function-ctx|.) N
+() N
+() S 8 T (Functions or variables can be enclosed by "{}" to prevent function or) N
+(xpt.snippet.syn.txt) (Page 9/13) (Apr 18, 10 23:50) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T (variable names messing up with the surrounding plain text.) N
+() N
+() S 8 T (Functions are not evaluated if "\(\)" is escaped : >) N
+() S 8 T () S 16 T (S\\\(S\("abc", '.', '\\u&'\)\)) N
+(<) S 8 T (is evaluated to : >) N
+() S 8 T () S 16 T (S\(ABC\)) N
+(<) N
+() S 8 T (Escaping the '$' stops variable evaluation : >) N
+() S 8 T () S 16 T (\\$author) N
+(<) S 8 T (is evaluated to : >) N
+() S 8 T () S 16 T ($author) N
+(<) S 8 T () N
+() S 8 T (Escaping the "{}" : >) N
+() S 8 T () S 16 T (\\{S\("abc", '.', '\\u&'\)}) N
+(<) S 8 T (is evaluated to : >) N
+() S 8 T () S 16 T ({ABC}) N
+(<) S 8 T (While : >) N
+() S 8 T () S 16 T ({S\("abc", '.', '\\u&'\)}) N
+(<) S 8 T (is evaluated to : >) N
+() S 8 T () S 16 T (ABC) N
+(<) S 8 T () N
+() S 8 T (Another example, supposing you are editing a file named) N
+() S 8 T ("your_file_name.ext" : >) N
+() S 8 T () S 16 T (__{S\(E\("%:t"\),".","\\\\u&"\)}__) N
+(<) S 8 T (is evaluated to : >) N
+() S 8 T () S 16 T (__YOUR_FILE_NAME.EXT__) N
+(<) S 8 T (And : >) N
+() S 8 T () S 16 T (this is S\($author,".","-&"\)-) N
+(<) S 8 T (is evaluated to : >) N
+() S 8 T () S 16 T (this is -d-r-d-r-.-x-p-) N
+(<) S 8 T (See also: ) N
+() S 8 T () S 16 T (|xpt-snippet-function|) N
+() S 8 T () S 16 T (|xpt-snippet-variable|) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (   *xpt-snippet-instant-value*) N
+() S 8 T (There is a special case for |xpt-snippet-placeholder| when the place) N
+() S 8 T (holder's content is a |xpt-snippet-expression|. In this case the place) N
+() S 8 T (holder is evaluated at once, and no more further editing can happen on) N
+() S 8 T (this place holder. For example : >) N
+() S 8 T () S 16 T (XPT filehead) N
+() S 8 T () S 16 T (...) N
+() S 8 T () S 16 T ( * @since : `strftime\("%Y %b %d"\)^) N
+() S 8 T () S 16 T (...) N
+(<) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (    *xpt-snippet-preset-value*) N
+() S 8 T (Preset values are like |xpt-snippet-default-value| but are applied) N
+() S 8 T (earlier. |xpt-snippet-default-value| are applied before the place) N
+() S 8 T (holders are focused; preset value are applied just after the snippet) N
+() S 8 T (is displayed on the screen.) N
+() S 8 T (To define preset values: >) N
+() S 8 T () S 16 T (XSET the_name|pre=<expression>) N
+(<) S 8 T () N
+( ) S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (   *xpt-snippet-default-value*) N
+() S 8 T (By default place holders use their name as the default value but you) N
+() S 8 T (can choose another text as default value by using : >) N
+() S 8 T () S 16 T (XSET the_name|def=<expression>) N
+(<) S 8 T () N
+() S 8 T (So that before cursor jumps to leading place holder of name) N
+() S 8 T ("the_name", the <expression> evaluated and applied to the place) N
+() S 8 T (holder.) N
+() N
+() S 8 T (Example : the "#ind" snippet defined as : >) N
+() S 8 T () S 16 T (XPT #ind) N
+() S 8 T () S 16 T (XSET me|def|=fileRoot\(\)) N
+() S 8 T () S 16 T (#include "`me^.h") N
+(<) S 8 T (In C language, type "#ind<C-\\>" you get : >) N
+() S 8 T () S 16 T (#include "current_file_name.h") N
+(<) S 8 T () N
+() S 8 T (NOTE : if default value expression contains only plain string and) N
+(xpt.snippet.syn.txt) (Page 10/13) (Apr 18, 10 23:50) title
+border
+grestore
+(Printed by Vincent Wang) rhead
+(xpt.snippet.syn.txt) (5/7) (Tuesday April 27, 2010) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11-12) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T (|xpt-snippet-variable|, it is used as |xpt-snippet-preset-value|, too;) N
+() S 8 T (for better looking without any side-effect.) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (    *xpt-snippet-post-filter*) N
+() S 8 T (Post filters are executed after the user presses <Tab> and change the) N
+() S 8 T (typed text. To define a post filter use : >) N
+() S 8 T () S 16 T (XSET the_name|post=<expression>) N
+(<) S 8 T (Or use |xpt-snippet-postQuoter| : >) N
+() S 8 T () S 16 T (XPT enum hint=enum\\ {\\ ..\\ }) N
+() S 8 T () S 16 T (enum `name^`$BRstc^{) N
+() S 8 T () S 16 T (    `elt^;`) N
+() S 8 T () S 16 T (    `...{{^) N
+() S 8 T () S 16 T (    `elt^;`) N
+() S 8 T () S 16 T (    `...^`}}^) N
+() S 8 T () S 16 T (}` `var^;) N
+(<) N
+() S 8 T (Some usually-used post filter functions are defined in) N
+() S 8 T (ftplugin/_common/common.xpt.vim. ) N
+() N
+() S 8 T (For example for c language, "#ifndef" snippet is defined as follows : >) N
+() S 8 T () S 16 T (XPT #ifndef) S 32 T (hint=#ifndef\\ ..) N
+() S 8 T () S 16 T (XSET symbol=S\(fileRoot\(\),'\\.','_','g'\)) N
+() S 8 T () S 16 T (XSET symbol|post=UpperCase\(V\(\)\)) N
+() S 8 T () S 16 T (#ifndef `symbol^) N
+() S 8 T () S 16 T (#     define `symbol^) N
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T (`cursor^ ) N
+() S 8 T () S 16 T (#endif `$CL^ `symbol^ `$CR^) N
+() S 8 T () S 16 T (..XPT) N
+(<) S 8 T () N
+() S 8 T (When you pressing <tab> from the first item "symbol", typed content are) N
+() S 8 T (converted to upper case. Before <tab> pressed : >) N
+() S 8 T () S 16 T (#ifndef __gnu__) N
+() S 8 T () S 16 T (#    define __gnu__) N
+() S 8 T () S 16 T (`cursor^) N
+() S 8 T () S 16 T (#endif /* __gnu__ */) N
+(<) S 8 T (After <tab> pressed : >) N
+() S 8 T () S 16 T (#ifndef __GNU__) N
+() S 8 T () S 16 T (#    define __GNU__) N
+() S 8 T () S 16 T (`cursor^) N
+() S 8 T () S 16 T (#endif /* __GNU__ */) N
+(<) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (     *xpt-snippet-default-post-filter*) N
+() S 8 T (Place holder with some special has default post filter set. Following) N
+() S 8 T (sections discuss them.) N
+() N
+() S 8 T (Place holders have default place holder defined: >) N
+() S 8 T () S 16 T (\\V\\w\\+?) S 24 T () S 32 T (EchoIfNoChange\(''\)) N
+(<) N
+() N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T ( *xpt-placeholder-optional-ph*) N
+() S 8 T (If a place holder name matches pattern '\\V\\w\\+?', "EchoIfNoChange\(''\)") N
+() S 8 T (is assigned as its post filter. ) N
+() S 8 T (This makes the place holder optional. ) N
+() N
+() S 8 T (For example a snippet defined as below: >) N
+() S 8 T () S 16 T (fun\(`arg^`, `context?^\)) N
+(<) S 8 T (When you render this snippet, and cursor stays on "context?" : >) N
+() S 8 T () S 16 T (fun\(arg, context?\)) N
+() S 8 T () S 16 T () S 24 T ( --------) N
+() S 8 T () S 16 T () S 24 T () S 32 T ( \\__ selected) N
+(<) S 8 T (Pressing <Tab> clears it, and snippet becomes: >) N
+() S 8 T () S 16 T (fun\(arg\)) N
+(<) S 8 T () N
+() N
+() N
+(xpt.snippet.syn.txt) (Page 11/13) (Apr 18, 10 23:50) title
+border
+/v 1 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T ( *xpt-placeholder-post-filter*) N
+() S 8 T (For each place holder a private post filter can also be set by using) N
+() S 8 T (the |^||^| syntax : >) N
+() S 8 T () S 16 T (XPT lowerUpper) N
+() S 8 T () S 16 T (lower : `text^) N
+() S 8 T () S 16 T (upper : `text^UpperCase\(V\(\)\)^^) S 48 T (<---- double "^") N
+(<) S 8 T (Press <Tab>, this snippet results in : >) N
+() S 8 T () S 16 T (lower : text) N
+() S 8 T () S 16 T (upper : TEXT) N
+(<) S 8 T () N
+() S 8 T (NOTE If both |xpt-snippet-post-filter| and) N
+() S 8 T (|xpt-placeholder-post-filter| are set, the place holder filter takes) N
+() S 8 T (effect.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (       *xpt-placeholder-default-value*) N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T (       *xpt-placeholder-ontime-filter*) N
+() S 8 T (For each place holder an ontime filter can be set to filter the text) N
+() S 8 T (each time the user types something by using the |^| syntax : >) N
+() S 8 T () S 16 T (XPT lowerUpper) N
+() S 8 T () S 16 T (lower : `text^) N
+() S 8 T () S 16 T (upper : `text^UpperCase\(V\(\)\)^) S 48 T (<--- only one "^") N
+(<) S 8 T (Each time the user types something at place holder "text" the second) N
+() S 8 T (place holder is updated with the content converted to upper case.) N
+() N
+() S 8 T (NOTE ontime filter is used as |xpt-placeholder-default-value| for the) N
+() S 8 T (leading place holder.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (      *xpt-snippet-expandable*) N
+() S 8 T (Sometimes you want to create an additional piece of snippet other than) N
+() S 8 T (the original snippet. For example, add another "else" after an "if") N
+() S 8 T (block. To do this use expandable : >) N
+() S 8 T () S 16 T (XPT if ) N
+() S 8 T () S 16 T (if `cond^) N
+() S 8 T () S 16 T (    `job^) N
+() S 8 T () S 16 T (`else...{{^else) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (`}}^) N
+() S 8 T () S 16 T (endif) N
+(<) S 8 T (At the place holder "else..." press <Tab> to generate another else) N
+() S 8 T (block, the text quoted by {{ and }}. Press to <Cr> to clear "else...".) N
+() N
+() S 8 T (Another way to define expandable is by using XSET command to define a) N
+() S 8 T (post filter: >) N
+() S 8 T () S 16 T (XPT if) N
+() S 8 T () S 16 T (if \(`condition^\)`$BRif^{ ) N
+() S 8 T () S 16 T (    `job^) N
+() S 8 T () S 16 T (}` `else...^) N
+() S 8 T () S 16 T (XSETm else...|post) N
+() S 8 T () S 16 T (else { ) N
+() S 8 T () S 16 T (    `cursor^) N
+() S 8 T () S 16 T (}) N
+() S 8 T () S 16 T (XSETm END) N
+(<) S 8 T (These 2 methods are the same inside XPTemplate.) N
+() N
+() S 8 T () S 16 T () S 24 T () S 32 T () S 40 T () S 48 T (      *xpt-snippet-repetition*) N
+() S 8 T (Repetition is only a special case utilizing expandable, that another) N
+() S 8 T (same expandable trigger residing inside the expandable part.) N
+() N
+() S 8 T (For example the "case"s in "switch". To specify the repetition part,) N
+() S 8 T (just wrap the part you want it to repeat with `...^. n is a number and) N
+() S 8 T (can be omitted.  Take the case from "switch": >) N
+() S 8 T () S 16 T (XPT switch) N
+() S 8 T () S 16 T (switch \(`^\) {) N
+() S 8 T () S 16 T (  `...^            | repetition part) N
+() S 8 T () S 16 T (  case `^0^ :      |) N
+() S 8 T () S 16 T (    `^             |) N
+() S 8 T () S 16 T (    break;         |) N
+() S 8 T () S 16 T (  `...^            |) N
+() S 8 T () S 16 T () N
+(xpt.snippet.syn.txt) (Page 12/13) (Apr 18, 10 23:50) title
+border
+grestore
+(Printed by Vincent Wang) rhead
+(xpt.snippet.syn.txt) (6/7) (Tuesday April 27, 2010) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (13) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.147420 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+() p 8 T () S 16 T (  default:) N
+() S 8 T () S 16 T (    `^) N
+() S 8 T () S 16 T (}) N
+(<) N
+() S 8 T (When you trigger a repetition template it works as below: >) N
+() S 8 T () S 16 T (switch \(\) {    <------- cursor stays here) N
+() S 8 T () S 16 T (  `...^) N
+() N
+() S 8 T () S 16 T (  default:) N
+() S 8 T () S 16 T (      `^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (Press <Tab>, the |`...^| is selected. Press <Tab> again to expand the) N
+() S 8 T (repetition part. Or press <Cr> |xpt-key-clear| to cancel the) N
+() S 8 T (repetition part. These 4 lines are expanded: >) N
+() S 8 T () S 16 T (switch \(\) {) N
+() N
+() S 8 T () S 16 T (  case `^ :         | expanded) N
+() S 8 T () S 16 T (    `^              |) N
+() S 8 T () S 16 T () S 24 T (break;      |) N
+() S 8 T () S 16 T (    `...^           |) N
+() N
+() S 8 T () S 16 T (  default:) N
+() S 8 T () S 16 T () S 24 T (`^) N
+() S 8 T () S 16 T (}) N
+(<) S 8 T (Enter the repetition part. There is another |`...^|, that is the) N
+() S 8 T (another repeat trigger.) N
+() N
+() S 8 T (Press <Tab> 3 times: >) N
+() S 8 T () S 16 T (switch \(\) {) N
+() N
+() S 8 T () S 16 T (  case 0 :) N
+() N
+() S 8 T () S 16 T (    break;) N
+() N
+() S 8 T () S 16 T (  case `^ :        | selected repetition part) N
+() S 8 T () S 16 T (    `^             |) N
+() S 8 T () S 16 T () S 24 T (break;     |) N
+() S 8 T () S 16 T (    `...^          |) N
+() N
+() S 8 T () S 16 T (  default:) N
+() S 8 T () S 16 T () S 24 T (`^) N
+() S 8 T () S 16 T (}) N
+(<) N
+() S 8 T (Using named |`...^| allows you define multiple repetition parts in one) N
+() S 8 T (snippet. For example: >) N
+() S 8 T () S 16 T (XPT switch) N
+() S 8 T () S 16 T (switch \(`^\) {) N
+() S 8 T () S 16 T (  `case...^        | repetition part) N
+() S 8 T () S 16 T (  case `^0^ :      |) N
+() S 8 T () S 16 T (    `^             |) N
+() S 8 T () S 16 T (    break;         |) N
+() S 8 T () S 16 T (  `case...^        |) N
+() S 8 T () S 16 T () N
+() S 8 T () S 16 T (  default:) N
+() S 8 T () S 16 T (    `^) N
+() S 8 T () S 16 T (}) N
+(<) N
+() N
+() S 8 T (See |xpt-repetition| for using repetition.) N
+() N
+() N
+(" vim:tw=78:ts=8:sw=8:sts=8:noet:ft=help:norl:) N
+(xpt.snippet.syn.txt) (Page 13/13) (Apr 18, 10 23:50) title
+border
+grestore
+(Printed by Vincent Wang) rhead
+(xpt.snippet.syn.txt) (7/7) (Tuesday April 27, 2010) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF
