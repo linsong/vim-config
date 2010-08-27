@@ -78,6 +78,7 @@ fu! <SID>CommanderMappings()
  	noremap <silent> <buffer> ;ren             :cal <SID>FileMove(1)<CR>
  	noremap <silent> <buffer> ;mkd             :cal <SID>DirCreate()<CR>
  	noremap <silent> <buffer> ;del             :cal <SID>FileDelete()<CR>
+	noremap <silent> <buffer> ;new             :cal <SID>NewFileEdit()<CR>
 
 	"Panel-dirs
 	noremap <silent> <buffer> <leader><Left>   :cal <SID>GetOrPutDir('l')<CR>
