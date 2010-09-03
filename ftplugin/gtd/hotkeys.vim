@@ -15,3 +15,6 @@ setlocal makeprg=~/tools/gtd
 nmap <buffer> <F5> :make<CR>
 
 setlocal foldmethod=marker
+setlocal ts=2
+setlocal sw=2
+setlocal expandtab

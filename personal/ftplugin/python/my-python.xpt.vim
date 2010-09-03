@@ -1,17 +1,22 @@
-snippet d
+XPTemplate priority=personal+
+
+" inclusion
+XPTinclude
+      \ _common/common
+
+XPTemplateDef
+
+XPT d
 import pdb, readline; pdb.set_trace();
-endsnippet
 
-snippet rpdb
+XPT rpdb
 import rpdb2; rpdb2.start_embedded_debugger('hello')
-endsnippet
 
-snippet log
+XPT log
 import logging;
 logging.critical(${1})
-endsnippet
 
-snippet manhole
+XPT manhole
 # set up  manhole service for debug purpose
 # !!! ATTENTION: NEVER USE IT ON LIVESITE !!!
 from twisted.internet import reactor
@@ -25,9 +30,8 @@ factory.username = 'vincent'
 factory.password = 'foo'
 print 'Listening on port %d' % port
 
-endsnippet
 
-snippet ipy 
+XPT ipy 
 #############  Embeded IPython #############
 try:
 __IPYTHON__
@@ -43,10 +47,7 @@ def ipshell(): pass
 ipshell('***Hit Ctrl-D to exit interpreter and continue program.')
 #############       END        #############
 
-endsnippet
 
-snippet header
+XPT header
 #! /usr/bin/env python
 # -*- coding: utf8 -*- 
-endsnippet
-
