@@ -36,7 +36,7 @@
     " allow backspacing over everything in insert mode
     set backspace=indent,eol,start
 
-    set history=50      " keep 50 lines of command line history
+    set history=300      " keep 300 lines of command line history
     set ruler       " show the cursor position all the time
     set showcmd     " display incomplete commands
     set incsearch       " do incremental searching
@@ -142,7 +142,10 @@
 
     :set previewheight=25
 
-    set listchars=tab:»-,trail:·,extends:»,precedes:«
+    :set listchars=tab:»-,trail:·,extends:»,precedes:«
+    
+    :set showmatch "set show matching parenthesis
+
 "## }}}1
 
 "## Encodings {{{1
@@ -167,8 +170,9 @@
 
 "## General Mapping {{{1
 
-    " Don't use Ex mode, use Q for formatting
-    map Q gq
+    " Use Q for formatting the current paragraph (or selection)
+    vmap Q gq
+    nmap Q gqap
 
     " This is an alternative that also works in block mode, but the deleted
     " text is lost and it only works for putting the current register.
@@ -260,7 +264,7 @@
     " use enter to unhighlighted searched-for text
     "nnoremap <CR> :nohlsearch<CR><CR>
     "nnoremap <CR> :set invhlsearch<CR><CR>
-    nnoremap ,nh    :noh<CR>
+    nnoremap ,nh    :nohlsearch<CR>
     nnoremap <leader>q :close<CR>
 
     " mappings for quickfix mode 
@@ -397,6 +401,9 @@
     " use two windows to view a long file
     " from vim tip wiki: http://vim.wikia.com/wiki/View_text_file_in_two_columns
     :noremap <silent> <Leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
+
+    " does not need to press <shift> so much when ':w'
+    nnoremap ; :
 
 "## }}}1
 
@@ -1178,7 +1185,7 @@ endif " has("autocmd")
 
     "## Plugin related settings {{{1
     
-    "call pathogen#helptags()
+    call pathogen#helptags()
     call pathogen#runtime_append_all_bundles() 
 
     "### setting for winmanager.vim {{{2
