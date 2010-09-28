@@ -13,48 +13,40 @@ endif
 " GLOBAL FUNCTIONS {{{1
 
 "
-function fuf#givenfile#createHandler(base)
+function fuf#line#createHandler(base)
   return a:base.concretize(copy(s:handler))
 endfunction
 
 "
-function fuf#givenfile#getSwitchOrder()
-  return -1
+function fuf#line#getSwitchOrder()
+  return g:fuf_line_switchOrder
 endfunction
 
 "
-function fuf#givenfile#getEditableDataNames()
+function fuf#line#getEditableDataNames()
   return []
 endfunction
 
 "
-function fuf#givenfile#renewCache()
+function fuf#line#renewCache()
 endfunction
 
 "
-function fuf#givenfile#requiresOnCommandPre()
+function fuf#line#requiresOnCommandPre()
   return 0
 endfunction
 
 "
-function fuf#givenfile#onInit()
+function fuf#line#onInit()
+  call fuf#defineLaunchCommand('FufLine', s:MODE_NAME, '""')
 endfunction
-
-"
-function fuf#givenfile#launch(initialPattern, partialMatching, prompt, items)
-  let s:prompt = (empty(a:prompt) ? '>' : a:prompt)
-  let s:items = map(copy(a:items), 'fuf#makePathItem(v:val, "", 0)')
-  call fuf#mapToSetSerialIndex(s:items, 1)
-  call map(s:items, 'fuf#setAbbrWithFormattedWord(v:val, 1)')
-  call fuf#launch(s:MODE_NAME, a:initialPattern, a:partialMatching)
-endfunction
-
 
 " }}}1
 "=============================================================================
 " LOCAL FUNCTIONS/VARIABLES {{{1
 
 let s:MODE_NAME = expand('<sfile>:t:r')
+let s:OPEN_TYPE_DELETE = -1
 
 " }}}1
 "=============================================================================
@@ -69,7 +61,7 @@ endfunction
 
 "
 function s:handler.getPrompt()
-  return fuf#formatPrompt(s:prompt, self.partialMatching, '')
+  return fuf#formatPrompt(g:fuf_line_prompt, self.partialMatching, '')
 endfunction
 
 "
@@ -84,25 +76,37 @@ endfunction
 
 "
 function s:handler.makePatternSet(patternBase)
-  return fuf#makePatternSet(a:patternBase, 's:interpretPrimaryPatternForPath',
+  return fuf#makePatternSet(a:patternBase, 's:interpretPrimaryPatternForNonPath',
         \                   self.partialMatching)
 endfunction
 
 "
 function s:handler.makePreviewLines(word, count)
-  return fuf#makePreviewLinesForFile(a:word, a:count, self.getPreviewHeight())
+  let items = filter(copy(self.items), 'v:val.word ==# a:word')
+  if empty(items)
+    return []
+  endif
+  let lines = fuf#getFileLines(self.bufNrPrev)
+  return fuf#makePreviewLinesAround(
+        \ lines, [items[0].index - 1], a:count, self.getPreviewHeight())
 endfunction
 
 "
 function s:handler.getCompleteItems(patternPrimary)
-  return s:items
+  return self.items
 endfunction
 
 "
 function s:handler.onOpen(word, mode)
-  call fuf#openFile(a:word, a:mode, g:fuf_reuseWindow)
+  call fuf#prejump(a:mode)
+  call filter(self.items, 'v:val.word ==# a:word')
+  if empty(self.items)
+    return
+    execute 'cc ' . self.items[0].index
+  endif
+  call cursor(self.items[0].index, 0)
+  normal! zvzz
 endfunction
-
 
 "
 function s:handler.onModeEnterPre()
@@ -110,6 +114,16 @@ endfunction
 
 "
 function s:handler.onModeEnterPost()
+  let tab = repeat(' ', getbufvar(self.bufNrPrev, '&tabstop'))
+  let self.items = getbufline(self.bufNrPrev, 1, '$')
+  let lnumFormat = '%' . len(string(len(self.items) + 1)) . 'd|'
+  for i in range(len(self.items))
+    let self.items[i] = printf(lnumFormat, i + 1)
+          \ . substitute(self.items[i], "\t", tab, 'g')
+  endfor
+  call map(self.items, 'fuf#makeNonPathItem(v:val, "")')
+  call fuf#mapToSetSerialIndex(self.items, 1)
+  call map(self.items, 'fuf#setAbbrWithFormattedWord(v:val, 0)')
 endfunction
 
 "

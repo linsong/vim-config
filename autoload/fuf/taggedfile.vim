@@ -1,13 +1,12 @@
 "=============================================================================
-" Copyright (c) 2007-2009 Takeshi NISHIDA
+" Copyright (c) 2007-2010 Takeshi NISHIDA
 "
 "=============================================================================
 " LOAD GUARD {{{1
 
-if exists('g:loaded_autoload_fuf_taggedfile') || v:version < 702
+if !l9#guardScriptLoading(expand('<sfile>:p'), 702, 100)
   finish
 endif
-let g:loaded_autoload_fuf_taggedfile = 1
 
 " }}}1
 "=============================================================================
@@ -21,6 +20,11 @@ endfunction
 "
 function fuf#taggedfile#getSwitchOrder()
   return g:fuf_taggedfile_switchOrder
+endfunction
+
+"
+function fuf#taggedfile#getEditableDataNames()
+  return []
 endfunction
 
 "
@@ -47,11 +51,26 @@ let s:MODE_NAME = expand('<sfile>:t:r')
 "
 function s:getTaggedFileList(tagfile)
   execute 'cd ' . fnamemodify(a:tagfile, ':h')
-  let result = map(readfile(a:tagfile), 'matchstr(v:val, ''^[^!\t][^\t]*\t\zs[^\t]\+'')')
-  call map(readfile(a:tagfile), 'fnamemodify(v:val, ":p")')
+  let result = map(l9#readFile(a:tagfile), 'matchstr(v:val, ''^[^!\t][^\t]*\t\zs[^\t]\+'')')
+  call map(l9#readFile(a:tagfile), 'fnamemodify(v:val, ":p")')
   cd -
-  call map(readfile(a:tagfile), 'fnamemodify(v:val, ":~:.")')
+  call map(l9#readFile(a:tagfile), 'fnamemodify(v:val, ":~:.")')
   return filter(result, 'v:val =~# ''[^/\\ ]$''')
+endfunction
+
+"
+function s:parseTagFiles(tagFiles, key)
+  let cacheName = 'cache-' . l9#hash224(a:key)
+  let cacheTime = fuf#getDataFileTime(s:MODE_NAME, cacheName)
+  if cacheTime != -1 && fuf#countModifiedFiles(a:tagFiles, cacheTime) == 0
+    return fuf#loadDataFile(s:MODE_NAME, cacheName)
+  endif
+  let items = l9#unique(l9#concat(map(copy(a:tagFiles), 's:getTaggedFileList(v:val)')))
+  call map(items, 'fuf#makePathItem(v:val, "", 0)')
+  call fuf#mapToSetSerialIndex(items, 1)
+  call fuf#mapToSetAbbrWithSnippedWordAsPath(items)
+  call fuf#saveDataFile(s:MODE_NAME, cacheName, items)
+  return items
 endfunction
 
 "
@@ -59,14 +78,12 @@ function s:enumTaggedFiles(tagFiles)
   if !len(a:tagFiles)
     return []
   endif
-  let key = join([getcwd()] + a:tagFiles, "\n")
-  " cache not created or tags file updated? 
-  if !exists('s:cache[key]') || max(map(copy(a:tagFiles), 'getftime(v:val) >= s:cache[key].time'))
-    let items = fuf#unique(fuf#concat(map(copy(a:tagFiles), 's:getTaggedFileList(v:val)')))
-    call map(items, 'fuf#makePathItem(v:val, "", 0)')
-    call fuf#mapToSetSerialIndex(items, 1)
-    call fuf#mapToSetAbbrWithSnippedWordAsPath(items)
-    let s:cache[key] = { 'time'  : localtime(), 'items' : items }
+  let key = join([getcwd(), g:fuf_ignoreCase] + a:tagFiles, "\n")
+  if !exists('s:cache[key]') || fuf#countModifiedFiles(a:tagFiles, s:cache[key].time)
+    let s:cache[key] = {
+          \   'time'  : localtime(),
+          \   'items' : s:parseTagFiles(a:tagFiles, key)
+          \ }
   endif
   return s:cache[key].items
 endfunction
@@ -84,7 +101,7 @@ endfunction
 
 "
 function s:handler.getPrompt()
-  return g:fuf_taggedfile_prompt
+  return fuf#formatPrompt(g:fuf_taggedfile_prompt, self.partialMatching, '')
 endfunction
 
 "
@@ -93,19 +110,19 @@ function s:handler.getPreviewHeight()
 endfunction
 
 "
-function s:handler.targetsPath()
+function s:handler.isOpenable(enteredPattern)
   return 1
 endfunction
 
 "
 function s:handler.makePatternSet(patternBase)
-  return fuf#makePatternSet(a:patternBase, 's:parsePrimaryPatternForPath',
+  return fuf#makePatternSet(a:patternBase, 's:interpretPrimaryPatternForPath',
         \                   self.partialMatching)
 endfunction
 
 "
 function s:handler.makePreviewLines(word, count)
-  return fuf#makePreviewLinesForFile(a:word, count, self.getPreviewHeight())
+  return fuf#makePreviewLinesForFile(a:word, a:count, self.getPreviewHeight())
 endfunction
 
 "
@@ -125,11 +142,12 @@ endfunction
 
 "
 function s:handler.onModeEnterPost()
+  " NOTE: Comparing filenames is faster than bufnr('^' . fname . '$')
+  let bufNamePrev = fnamemodify(bufname(self.bufNrPrev), ':p:~:.')
   " NOTE: Don't do this in onModeEnterPre()
   "       because that should return in a short time.
-  let self.items =
-        \ filter(copy(s:enumTaggedFiles(self.tagFiles)),
-        \        'bufnr("^" . v:val.word . "$") != self.bufNrPrev')
+  let self.items = copy(s:enumTaggedFiles(self.tagFiles))
+  call filter(self.items, 'v:val.word !=# bufNamePrev')
 endfunction
 
 "

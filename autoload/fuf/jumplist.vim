@@ -1,13 +1,12 @@
 "=============================================================================
-" Copyright (c) 2007-2009 Takeshi NISHIDA
+" Copyright (c) 2007-2010 Takeshi NISHIDA
 "
 "=============================================================================
 " LOAD GUARD {{{1
 
-if exists('g:loaded_autoload_fuf_jumplist') || v:version < 702
+if !l9#guardScriptLoading(expand('<sfile>:p'), 702, 100)
   finish
 endif
-let g:loaded_autoload_fuf_jumplist = 1
 
 " }}}1
 "=============================================================================
@@ -21,6 +20,11 @@ endfunction
 "
 function fuf#jumplist#getSwitchOrder()
   return g:fuf_jumplist_switchOrder
+endfunction
+
+"
+function fuf#jumplist#getEditableDataNames()
+  return []
 endfunction
 
 "
@@ -101,7 +105,7 @@ endfunction
 
 "
 function s:handler.getPrompt()
-  return g:fuf_jumplist_prompt
+  return fuf#formatPrompt(g:fuf_jumplist_prompt, self.partialMatching, '')
 endfunction
 
 "
@@ -110,13 +114,13 @@ function s:handler.getPreviewHeight()
 endfunction
 
 "
-function s:handler.targetsPath()
-  return 0
+function s:handler.isOpenable(enteredPattern)
+  return 1
 endfunction
 
 "
 function s:handler.makePatternSet(patternBase)
-  return fuf#makePatternSet(a:patternBase, 's:parsePrimaryPatternForNonPath',
+  return fuf#makePatternSet(a:patternBase, 's:interpretPrimaryPatternForNonPath',
         \                   self.partialMatching)
 endfunction
 
@@ -165,7 +169,7 @@ function s:handler.onModeEnterPost()
   call filter(self.items, '!empty(v:val)')
   call reverse(self.items)
   call fuf#mapToSetSerialIndex(self.items, 1)
-  call map(self.items, 'fuf#setAbbrWithFormattedWord(v:val)')
+  call map(self.items, 'fuf#setAbbrWithFormattedWord(v:val, 1)')
 endfunction
 
 "

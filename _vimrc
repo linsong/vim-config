@@ -1404,7 +1404,9 @@ endif " has("autocmd")
     "}}}2
     
     "### setting for fuzzyfinder.vim {{{2
-    let g:fuf_modesDisable = []
+    " by default mru command and mru file modes are disabled
+    let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'coveragefile', 'help']
+
     let g:fuf_abbrevMap = 
                 \    { "^,w" : [$PROJECT_DIR],
                 \      "^,v" : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
@@ -1424,26 +1426,23 @@ endif " has("autocmd")
     let g:fuf_ignoreCase = 1
     let g:fuf_useMigemo = 0
 
+    let g:fuf_promptHighlight = 'FileMode'
+
     " customize mode's prompts 
     let g:fuf_buffer_prompt = '[Buffer]'
-    let g:fuf_buffer_promptHighlight = 'BufferMode'
     let g:fuf_file_prompt = '[File]'
-    let g:fuf_file_promptHighlight = 'FileMode'
     let g:fuf_dir_prompt = '[Dir]'
-    let g:fuf_dir_promptHighlight = 'DirMode'
     let g:fuf_mrufile_prompt = '[MruFile]'
-    let g:fuf_mrufile_promptHighlight = 'MruFileMode'
     let g:fuf_mrucmd_prompt = '[MruCmd]'
-    let g:fuf_mrucmd_promptHighlight = 'MruCmdMode'
-    let g:fuf_bookmark_prompt = '[Bookmark]'
-    let g:fuf_bookmark_promptHighlight = 'BookmarkMode'
+    let g:fuf_bookmarkfile_prompt = '[BookmarkFile]'
+    let g:fuf_bookmarkdir_prompt = '[BookmarkDir]'
     let g:fuf_tag_prompt = '[Tag]'
-    let g:fuf_tag_promptHighlight = 'TagMode'
-    let g:fuf_taggedFile_prompt = '[TaggedFile]'
-    let g:fuf_taggedFile_promptHighlight = 'TaggedFileMode'
+    let g:fuf_taggedfile_prompt = '[TaggedFile]'
     let g:fuf_givenFile_prompt = '[GivenFile]'
-    let g:fuf_givenFile_promptHighlight = 'GivenFileMode'
-
+    let g:fuf_jumplist_prompt = '[Jump-List]'
+    let g:fuf_changelist_prompt = '[Change-List]'
+    let g:fuf_quickfix_prompt = '[Quickfix]'
+    let g:fuf_line_prompt = '[Line]'
 
     let g:fuf_keyOpenTabpage = '<C-t>'
     let g:fuf_keyOpen = '<CR>'
@@ -1454,14 +1453,20 @@ endif " has("autocmd")
     :noremap ,fb :FufBuffer<CR>
     :noremap ,fm :FufMruFile<CR>
     :noremap ,f; :FufMruCmd<CR>
-    :noremap ,fk :FufBookmark<CR>
-    :noremap ,fa :FufAddBookmarkAsSelectedText<CR>
+    :noremap ,fk :FufBookmarkFile<CR>
+    :noremap ,fa :FufBookmarkFileAdd<CR>
+    :noremap ,fr :FufBookmarkDir<CR>
+    :noremap ,fe :FufBookmarkDirAdd<CR>
     :noremap ,fd :FufDir<CR>
     :noremap ,ft :FufTaggedFile<CR>
     :noremap ,fg :FufTag<CR>
     :noremap ,f] :FufTag! <C-r>=expand('<cword>')<CR><CR>
+    :noremap ,fl :FufLine<CR>
+    :noremap ,fq :FufQuickfix<CR>
+    :noremap ,fp :FufChangeList<CR>
+    :noremap ,fj  :FufJumpList<CR>
+    :noremap ,fi :FufEditDataFile<CR>
     :noremap ,fc :FufRenewCache<CR>
-    :noremap ,fi :FuzzyFinderEditInfo<CR>
 
     " super find file command, will search the files recursively from current
     " directory

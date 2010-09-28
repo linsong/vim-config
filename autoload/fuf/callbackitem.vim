@@ -1,13 +1,12 @@
 "=============================================================================
-" Copyright (c) 2007-2009 Takeshi NISHIDA
+" Copyright (c) 2007-2010 Takeshi NISHIDA
 "
 "=============================================================================
 " LOAD GUARD {{{1
 
-if exists('g:loaded_autoload_fuf_callbackitem') || v:version < 702
+if !l9#guardScriptLoading(expand('<sfile>:p'), 702, 100)
   finish
 endif
-let g:loaded_autoload_fuf_callbackitem = 1
 
 " }}}1
 "=============================================================================
@@ -21,6 +20,11 @@ endfunction
 "
 function fuf#callbackitem#getSwitchOrder()
   return -1
+endfunction
+
+"
+function fuf#callbackitem#getEditableDataNames()
+  return []
 endfunction
 
 "
@@ -49,7 +53,7 @@ function fuf#callbackitem#launch(initialPattern, partialMatching, prompt, listen
   else
     call map(s:items, 'fuf#makeNonPathItem(v:val, "")')
     call fuf#mapToSetSerialIndex(s:items, 1)
-    call map(s:items, 'fuf#setAbbrWithFormattedWord(v:val)')
+    call map(s:items, 'fuf#setAbbrWithFormattedWord(v:val, 1)')
   endif
   call fuf#launch(s:MODE_NAME, a:initialPattern, a:partialMatching)
 endfunction
@@ -73,7 +77,7 @@ endfunction
 
 "
 function s:handler.getPrompt()
-  return s:prompt
+  return fuf#formatPrompt(s:prompt, self.partialMatching, '')
 endfunction
 
 "
@@ -85,22 +89,22 @@ function s:handler.getPreviewHeight()
 endfunction
 
 "
-function s:handler.targetsPath()
-  return s:forPath
+function s:handler.isOpenable(enteredPattern)
+  return 1
 endfunction
 
 "
 function s:handler.makePatternSet(patternBase)
   let parser = (s:forPath
-        \       ? 's:parsePrimaryPatternForPath'
-        \       : 's:parsePrimaryPatternForNonPath')
+        \       ? 's:interpretPrimaryPatternForPath'
+        \       : 's:interpretPrimaryPatternForNonPath')
   return fuf#makePatternSet(a:patternBase, parser, self.partialMatching)
 endfunction
 
 "
 function s:handler.makePreviewLines(word, count)
   if s:forPath
-    return fuf#makePreviewLinesForFile(a:word, count, self.getPreviewHeight())
+    return fuf#makePreviewLinesForFile(a:word, a:count, self.getPreviewHeight())
   endif
   return []
 endfunction
@@ -125,7 +129,7 @@ endfunction
 
 "
 function s:handler.onModeLeavePost(opened)
-  if !a:opened
+  if !a:opened && exists('s:listener.onAbort()')
     call s:listener.onAbort()
   endif
 endfunction
