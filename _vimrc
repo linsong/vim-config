@@ -1464,9 +1464,10 @@ endif " has("autocmd")
     :noremap ,fl :FufLine<CR>
     :noremap ,fq :FufQuickfix<CR>
     :noremap ,fp :FufChangeList<CR>
-    :noremap ,fj  :FufJumpList<CR>
+    :noremap ,fj :FufJumpList<CR>
     :noremap ,fi :FufEditDataFile<CR>
     :noremap ,fc :FufRenewCache<CR>
+    :noremap ,fh :FufBufferTag<CR>
 
     " super find file command, will search the files recursively from current
     " directory

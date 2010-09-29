@@ -4,7 +4,7 @@
 "=============================================================================
 " LOAD GUARD {{{1
 
-if !l9#guardScriptLoading(expand('<sfile>:p'), 702, 100)
+if !l9#guardScriptLoading(expand('<sfile>:p'), 0, 0, [])
   finish
 endif
 
@@ -91,7 +91,7 @@ endfunction
 "
 function s:handler.makePreviewLines(word, count)
   return fuf#makePreviewLinesAround(
-        \ split(glob(fnamemodify(a:word, ':p') . '*'), "\n"),
+        \ fuf#glob(fnamemodify(a:word, ':p') . '*'),
         \ [], a:count, self.getPreviewHeight())
   return 
 endfunction

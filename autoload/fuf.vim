@@ -4,7 +4,7 @@
 "=============================================================================
 " LOAD GUARD {{{1
 
-if !l9#guardScriptLoading(expand('<sfile>:p'), 702, 100)
+if !l9#guardScriptLoading(expand('<sfile>:p'), 0, 0, [])
   finish
 endif
 
@@ -13,9 +13,22 @@ endif
 " GLOBAL FUNCTIONS {{{1
 
 
+" returns list of paths.
+" An argument for glob() is normalized in order to avoid a bug on Windows.
+function fuf#glob(expr)
+  " Substitutes "\", because on Windows, "**\" doesn't include ".\",
+  " but "**/" include "./". I don't know why.
+  return split(glob(substitute(a:expr, '\', '/', 'g')), "\n")
+endfunction
+
 "
 function fuf#countModifiedFiles(files, time)
-  return len(filter(copy(a:files), 'getftime(v:val) > a:time'))
+  return len(filter(copy(a:files), 'getftime(expand(v:val)) > a:time'))
+endfunction
+
+"
+function fuf#countModifiedBuffers(buffers, time)
+  return len(filter(copy(a:buffers), 'getftime(expand(bufname(v:val))) > a:time'))
 endfunction
 
 "
@@ -248,11 +261,7 @@ endfunction
 
 "
 function fuf#enumExpandedDirsEntries(dir, exclude)
-  " Substitutes "\" because on Windows, "**\" doesn't include ".\",
-  " but "**/" include "./". I don't know why.
-  let dirNormalized = substitute(a:dir, '\', '/', 'g')
-  let entries = split(glob(dirNormalized . "*" ), "\n") +
-        \       split(glob(dirNormalized . ".*"), "\n")
+  let entries = fuf#glob(a:dir . '*') + fuf#glob(a:dir . '.*')
   " removes "*/." and "*/.."
   call filter(entries, 'v:val !~ ''\v(^|[/\\])\.\.?$''')
   call map(entries, 'fuf#makePathItem(v:val, "", 1)')
@@ -317,9 +326,15 @@ function fuf#getModeNames()
 endfunction
 
 "
-function fuf#defineLaunchCommand(CmdName, modeName, prefixInitialPattern)
-  execute printf('command! -bang -narg=? %s call fuf#launch(%s, %s . <q-args>, len(<q-bang>))',
-        \        a:CmdName, string(a:modeName), a:prefixInitialPattern)
+function fuf#defineLaunchCommand(CmdName, modeName, prefixInitialPattern, tempVars)
+  if empty(a:tempVars)
+    let preCmd = ''
+  else
+    let preCmd = printf('call l9#tempvariables#setList(%s, %s) | ',
+          \             string(s:TEMP_VARIABLES_GROUP), string(a:tempVars))
+  endif
+  execute printf('command! -range -bang -narg=? %s %s call fuf#launch(%s, %s . <q-args>, len(<q-bang>))',
+        \        a:CmdName, preCmd, string(a:modeName), a:prefixInitialPattern)
 endfunction
 
 "
@@ -354,9 +369,14 @@ function fuf#launch(modeName, initialPattern, partialMatching)
   let s:runningHandler.lastCol = -1
   let s:runningHandler.windowRestoringCommand = winrestcmd()
   call s:runningHandler.onModeEnterPre()
+  " NOTE: updatetime is set, because in Buffer-Tag mode on Vim 7.3 on Windows,
+  " Vim keeps from triggering CursorMovedI for updatetime after system() is
+  " called. I don't know why.
   call fuf#setOneTimeVariables(
-        \ ['&completeopt', 'menuone'],
-        \ ['&ignorecase', 0],)
+        \  ['&completeopt', 'menuone'],
+        \  ['&ignorecase', 0],
+        \  ['&updatetime', 10],
+        \ )
   if s:runningHandler.getPreviewHeight() > 0
     call fuf#setOneTimeVariables(
           \ ['&cmdheight', s:runningHandler.getPreviewHeight() + 1])
@@ -854,7 +874,8 @@ endfunction
 "
 function s:handlerBase.onInsertLeave()
   unlet s:runningHandler
-  call l9#tempvariables#swap(s:TEMP_VARIABLES_GROUP)
+  let tempVars = l9#tempvariables#getList(s:TEMP_VARIABLES_GROUP)
+  call l9#tempvariables#end(s:TEMP_VARIABLES_GROUP)
   call s:deactivateFufBuffer()
   call fuf#saveDataFile(self.getModeName(), 'stats', self.stats)
   execute self.windowRestoringCommand
@@ -865,10 +886,8 @@ function s:handlerBase.onInsertLeave()
   endif
   call self.onModeLeavePost(fOpen)
   if exists('self.reservedMode')
-    call l9#tempvariables#swap(s:TEMP_VARIABLES_GROUP)
+    call l9#tempvariables#setList(s:TEMP_VARIABLES_GROUP, tempVars)
     call fuf#launch(self.reservedMode, self.lastPattern, self.partialMatching)
-  else
-    call l9#tempvariables#end(s:TEMP_VARIABLES_GROUP)
   endif
 endfunction
 
