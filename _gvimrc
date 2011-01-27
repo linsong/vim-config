@@ -56,6 +56,9 @@ if has("gui_macvim")
     :map ,, :call ToggleTransparency()<CR>
 endif
 
+map <D-t> :tabnew<CR>
+map <D-w> :tabclose<CR>
+
 " turn &cursorline on only in GUI && normal mode
 if exists("&cursorline")
     set cursorline
