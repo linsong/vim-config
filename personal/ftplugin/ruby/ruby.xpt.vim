@@ -15,6 +15,7 @@ require "ruby-debug"
 debugger
 
 XPT di alias=debug_include "insert ruby-debug
+XPT dd alias=debug_include "insert ruby-debug
 
 XPT tr "require unroller
 require 'unroller'
