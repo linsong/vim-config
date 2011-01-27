@@ -32,3 +32,8 @@ validates_presence_of :`attr^
 XPT validates_uniqueness_of
 validates_uniqueness_of :`attr^
 
+XPT benchmark_ wrap=wrapped " .. benchmark 
+ActiveRecord::Base.benchmark("`^") do 
+    `wrapped^ 
+end
+..XPT
