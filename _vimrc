@@ -146,6 +146,8 @@
     
     :set showmatch "set show matching parenthesis
 
+    :set viminfo^=!
+
 "## }}}1
 
 "## Encodings {{{1
