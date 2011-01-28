@@ -14,6 +14,8 @@ let b:loaded_hotkeys = 1
 setlocal makeprg=~/tools/gtd
 nmap <buffer> <F5> :make<CR>
 
+nmap <buffer> <C-D> :norm ^cEC=100<CR>
+
 setlocal foldmethod=marker
 setlocal ts=2
 setlocal sw=2
