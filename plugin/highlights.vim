@@ -333,3 +333,5 @@ function! s:Highlight(args) range
   echo 'Error: First argument must be highlight number 1..99'
 endfunction
 command! -nargs=* -range Highlight call <SID>Highlight('<args>')
+
+"silent call <SID>MatchToggle() " turn on highlight at beginning
