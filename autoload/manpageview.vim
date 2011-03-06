@@ -124,8 +124,10 @@ fun! manpageview#ManPageView(viamap,bknum,...) range
 	 let bknum = bknum.a:1
 	 let topic = a:2
 	else
-     let topic= substitute(a:1,'[^-a-zA-Z.0-9_:].*$','','')
-"     call Decho("a:1<".a:1."> topic<".topic."> (after fix)")
+     let topic = substitute(a:1,'^"','','')
+     let topic = substitute(topic,'"$','','')
+     let topic = substitute(topic,'[^-a-zA-Z.0-9_:#].*$','','')
+    "call Decho("a:1<".a:1."> topic<".topic."> (after fix)")
 	endif
    else
    	let topic= a:1
@@ -316,7 +318,11 @@ fun! manpageview#ManPageView(viamap,bknum,...) range
    " filetype: tex
   elseif &ft == "tex"
    let ext= "tex"
-   endif
+  elseif &ft == "ruby"
+    let ext="rb"
+  elseif &ft == "ri"
+    let ext="ri"
+  endif
   endif
 "  call Decho("ext<".ext.">")
 
@@ -544,13 +550,13 @@ fun! manpageview#ManPageView(viamap,bknum,...) range
 	  let mpb= ""
 	 endif
      if nospace
-"	  call Decho("(nospace) exe silent! ".cmdmod."r!".pgm.iopt.mpb.manpagetopic)
+	  "call Decho("(nospace) exe silent! ".cmdmod."r!".pgm.iopt.mpb.manpagetopic)
       exe cmdmod."r!".pgm.iopt.mpb.shellescape(manpagetopic,1).s:iconv
      elseif has("win32")
 "       call Decho("(win32) exe ".cmdmod."r!".pgm." ".iopt." ".mpb." \"".manpagetopic."\"")
        exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(manpagetopic,1)." ".s:iconv
 	 else
-"      call Decho("(nrml) exe ".cmdmod."r!".pgm." ".iopt." ".mpb." '".manpagetopic."'")
+      "call Decho("(nrml) exe ".cmdmod."r!".pgm." ".iopt." ".mpb." '".manpagetopic."'")
       exe cmdmod."r!".pgm." ".iopt." ".mpb." ".shellescape(manpagetopic,1)." ".s:iconv
 	endif
      exe cmdmod.'silent!  %s/.\b//ge'
