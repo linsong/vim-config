@@ -1007,17 +1007,43 @@ endif " has("autocmd")
 
     "### add a simple patch for manpageview.vim: check using which doc {{{2
     "tools according to current context
+    let g:manpageview_winopen="reuse"
+    "nmap <silent> <leader>k  :call FTSMan(expand("<cword>")) <CR>
     nmap <silent> <leader>k  :call FTSMan(expand("<cword>")) <CR>
+    vmap <silent> <leader>k  :call FTSMan('"'.GetVisualSelectionEscaped("").'"') <CR>
     " File Type Sessitive Man function
     function! FTSMan(word)
+        let manpagetopic = substitute(a:word,'[,.;]$','','')
         if &ft == 'python'
-            exe "Man " . a:word . ".py"
+            exe "Man " . manpagetopic . ".py"
         elseif &ft == 'perl'
-            exe "Man " . a:word . ".pl"
+            exe "Man " . manpagetopic . ".pl"
+        elseif &ft == 'ruby'
+            exe "Man " . manpagetopic . ".rb"
+        elseif &ft == 'ri'
+            exe "Man " . manpagetopic . ".ri"
         else
-            exe "Man " . a:word 
+            exe "Man " . manpagetopic 
         endif
     endfunction
+
+    if !exists("g:manpageview_pgm_rb")
+      if executable("fri")
+        let g:manpageview_pgm_rb     = "fri"
+        let g:manpageview_syntax_rb  = "ruby"
+
+        let g:manpageview_pgm_ri     = "fri"
+        let g:manpageview_syntax_ri  = "ruby"
+      elseif executable("ri")
+        let g:manpageview_pgm_rb     = "ri"
+        let g:manpageview_syntax_rb  = "ruby"
+
+        let g:manpageview_pgm_ri     = "ri"
+        let g:manpageview_syntax_ri  = "ruby"
+      else
+      endif
+    endif
+
     " }}}2
 
     "### define a function GetPage to get content of a webpage {{{2

@@ -38,7 +38,7 @@ colorscheme desert
               \ 'darkburn', 'darker-robin',
               \ 'darkZ', 'desertEx', 'ChocolateLiquor']
 "endif
-exec "colorscheme " . g:colorscheme_list[localtime()%len(g:colorscheme_list)]
+"exec "colorscheme " . g:colorscheme_list[localtime()%len(g:colorscheme_list)]
 ":colorscheme desert "mymud zenburn ps_color elflord metacosm dusk
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
