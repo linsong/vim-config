@@ -786,10 +786,9 @@ if has("autocmd")
            au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
            au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
         endif
-        
-        autocmd FileType html setlocal ts=2
-        autocmd FileType html setlocal sw=2
 
+        autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
+        
     augroup END
 
     " settings related to specified file type. but checkings for file type 
@@ -841,6 +840,8 @@ if has("autocmd")
         " add the current extension to the grep file list
         ":autocmd BufNewFile,BufRead * let g:Grep_Default_Filelist = join(["*." . expand("%:e")] + Grep_Default_Filelist_List, ' ')
 
+        autocmd FileType html setlocal ts=2
+        autocmd FileType html setlocal sw=2
     augroup END
     "}}}4
 
