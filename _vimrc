@@ -787,7 +787,8 @@ if has("autocmd")
            au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
         endif
 
-        autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
+        " highlight current word under cursor
+        "autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
         
     augroup END
 
@@ -1444,7 +1445,8 @@ endif " has("autocmd")
     let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'coveragefile', 'help']
 
     let g:fuf_abbrevMap = 
-                \    { "^,w" : [$PROJECT_DIR],
+                \    { "^,w" : [$PROJECT_DIR, "~/work/git/crawlware"],
+                \      "^,g" : ["~/work/git"],
                 \      "^,v" : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
                 \      "^,r" : ["app/models", "app/views", "app/controllers", "test/functional", "test/integration", "test/unit", "test/fixtures", "db/fixtures"],
                 \      "^,u" : [$PROJECT_DIR . "/../ui_design/template/feb2010/html/02 - current/"],
@@ -1595,6 +1597,21 @@ endif " has("autocmd")
     let g:mwHistAdd = "/@" 
     nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext 
     nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
+
+    highlight def MarkWord7   ctermfg=Cyan      ctermbg=Black  guifg=#8CCBEA    guibg=Black
+    highlight def MarkWord8   ctermfg=Green     ctermbg=Black  guifg=#A4E57E    guibg=Black
+    highlight def MarkWord9   ctermfg=Yellow    ctermbg=Black  guifg=#FFDB72    guibg=Black
+    highlight def MarkWord10  ctermfg=Red       ctermbg=Black  guifg=#FF7272    guibg=Black
+    highlight def MarkWord11  ctermfg=Magenta   ctermbg=Black  guifg=#FFB3FF    guibg=Black
+    highlight def MarkWord12  ctermfg=Blue      ctermbg=Black  guifg=#9999FF    guibg=Black
+
+    highlight def MarkWord13  ctermbg=Cyan      ctermfg=White  guibg=#8CCBEA    guifg=White
+    highlight def MarkWord14  ctermbg=Green     ctermfg=White  guibg=#A4E57E    guifg=White
+    highlight def MarkWord15  ctermbg=Yellow    ctermfg=White  guibg=#FFDB72    guifg=White
+    highlight def MarkWord16  ctermbg=Red       ctermfg=White  guibg=#FF7272    guifg=White
+    highlight def MarkWord17  ctermbg=Magenta   ctermfg=White  guibg=#FFB3FF    guifg=White
+    highlight def MarkWord18  ctermbg=Blue      ctermfg=White  guibg=#9999FF    guifg=White
+
     "if &t_Co>=256 || has("gui_running")
         "let loop_count = 0
         "let bg_colors = ["red","yellow","blue","green","magenta","cyan","gray","brown"]
