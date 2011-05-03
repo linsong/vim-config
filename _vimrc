@@ -148,6 +148,8 @@
 
     :set viminfo^=!
 
+    :set lazyredraw
+
 "## }}}1
 
 "## Encodings {{{1
