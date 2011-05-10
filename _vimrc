@@ -1597,6 +1597,7 @@ endif " has("autocmd")
     
     "### settings for mark.vim {{{2
     let g:mwHistAdd = "/@" 
+    let g:mwAutoLoadMarks = 1 
     nmap <Plug>IgnoreMarkSearchNext <Plug>MarkSearchNext 
     nmap <Plug>IgnoreMarkSearchPrev <Plug>MarkSearchPrev
 
