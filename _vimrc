@@ -129,6 +129,8 @@
     " save screen estate as much as possible
     :set numberwidth=1
 
+    :set nobackup writebackup
+
     " set tags 
     :set tags+=../tags,../../tags,ftags
 
@@ -145,6 +147,7 @@
     :set listchars=tab:»-,trail:·,extends:»,precedes:«
     
     :set showmatch "set show matching parenthesis
+
 
 "## }}}1
 
@@ -321,6 +324,7 @@
 
     " it can copy texts to last edited place continuously
     :vmap gy y:call CopyToLastEditPos()<CR>
+    :nmap gy yy:call CopyToLastEditPos()<CR>
 
     function! CopyToLastEditPos()
         let cmd = 'gigp'
@@ -639,7 +643,6 @@
       "set backup        " keep a backup file
     "endif
 
-    set nobackup writebackup
 
     let $VIMCFG = '$HOME/.vim'
 
