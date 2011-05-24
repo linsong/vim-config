@@ -648,6 +648,7 @@ endif
 
 
     let $VIMCFG = '$HOME/.vim'
+    "set clipboard=unnamed " for pbcopy and pbpast to work on macosx
 
     " how to check different systems
     "if has("unix")
