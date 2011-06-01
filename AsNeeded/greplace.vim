@@ -243,6 +243,10 @@ function! s:gSearch(type, ...)
         let argcnt += 1
     endwhile
 
+    if grep_opt == ''
+      let grep_opt = ' -rs '
+    endif
+
     " If search pattern is not specified on command-line, ask for it
     if pattern == ''
         let pattern = input('Search pattern: ', expand('<cword>'))
