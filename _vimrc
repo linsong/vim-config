@@ -45,7 +45,7 @@ set incsearch       " do incremental searching
 set wildmenu
 
 " enable mouse
-set mouse=a
+set mouse-=a
 
 " set search ignorecase 
 set ignorecase
@@ -407,7 +407,7 @@ endif
 
     " use two windows to view a long file
     " from vim tip wiki: http://vim.wikia.com/wiki/View_text_file_in_two_columns
-    :noremap <silent> <Leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
+    :noremap <silent> <leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
 
     " does not need to press <shift> so much when ':w'
     "nnoremap ; :
@@ -734,14 +734,16 @@ endif
     if !has("gui_running")
       "### color scheme settings {{{3
       " to enable 256 colors, you need to put following lines into .vimrc.local file 
-      ":set t_Co=256 " enable 256 colors refs: http://vim.wikia.com/wiki/256_colors_in_vim
+      :set t_Co=256 " enable 256 colors refs: http://vim.wikia.com/wiki/256_colors_in_vim
       """ NOTE: to make 256 colors work in GNU screen, screen need to be
       """       configured with ./configure --enable-colors256
       " if terminal support 256 colors, inkpot seems very nice
+      :colorscheme jellybeans
+      ":colorscheme xoria256
       ":colorscheme inkpot
       ":colorscheme koehler
       ":colorscheme desert " use desert since 256 colors does not work from my macbox
-      :colorscheme sienna " use sienna since 256 colors does not work from my macbox
+      ":colorscheme sienna " use sienna since 256 colors does not work from my macbox
 
       " xterm16 color scheme setting
       let xterm16_brightness = 'default'     " Change if needed
@@ -1259,31 +1261,32 @@ endif " has("autocmd")
     "### }}}2
 
     "### setting for vcscommand.vim {{{2
-    nmap <Leader>add <Plug>CVSAdd
-    nmap <Leader>va VCSAdd
-    nmap <Leader>vn VCSAnnotate
-    nmap <Leader>vc VCSCommit
-    nmap <Leader>vd VCSDiff
-    nmap <Leader>vg VCSGotoOriginal
-    nmap <Leader>vG VCSGotoOriginal!
-    nmap <Leader>vl VCSLog
-    nmap <Leader>vr VCSReview
-    nmap <Leader>vs VCSStatus
-    nmap <Leader>vu VCSUpdate
-    nmap <Leader>vv VCSVimDiff
+    " disabled for now
+    "nmap <Leader>add <Plug>CVSAdd
+    "nmap <Leader>va VCSAdd
+    "nmap <Leader>vn VCSAnnotate
+    "nmap <Leader>vc VCSCommit
+    "nmap <Leader>vd VCSDiff
+    "nmap <Leader>vg VCSGotoOriginal
+    "nmap <Leader>vG VCSGotoOriginal!
+    "nmap <Leader>vl VCSLog
+    "nmap <Leader>vr VCSReview
+    "nmap <Leader>vs VCSStatus
+    "nmap <Leader>vu VCSUpdate
+    "nmap <Leader>vv VCSVimDiff
 
     " only for cvs 
-    nmap <Leader>ve CVSEdit
-    nmap <Leader>vi CVSEditors
-    nmap <Leader>vt CVSUnedit
-    nmap <Leader>vwv CVSWatchers
-    nmap <Leader>vwa CVSWatchAdd
-    nmap <Leader>vwn CVSWatchOn
-    nmap <Leader>vwf CVSWatchOff
-    nmap <Leader>vwf CVSWatchRemove
+    "nmap <Leader>ve CVSEdit
+    "nmap <Leader>vi CVSEditors
+    "nmap <Leader>vt CVSUnedit
+    "nmap <Leader>vwv CVSWatchers
+    "nmap <Leader>vwa CVSWatchAdd
+    "nmap <Leader>vwn CVSWatchOn
+    "nmap <Leader>vwf CVSWatchOff
+    "nmap <Leader>vwf CVSWatchRemove
 
     " Only for SVN buffers:
-    nmap <Leader>vi SVNInfo
+    "nmap <Leader>vi SVNInfo
 
     "### }}}2
 
