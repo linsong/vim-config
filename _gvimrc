@@ -46,26 +46,11 @@ colorscheme desert
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
 
-" the following config to make gvim startup faster
-set guioptions-=M
-"set guioptions-=m
-
-set guioptions-=T
-
-if has("gui_macvim")
-    set fuoptions=maxvert,maxhorz,background:Normal
-    set lines=39 columns=157
-    :map ,, :call ToggleTransparency()<CR>
-endif
-
-map <D-t> :tabnew<CR>
-map <D-w> :tabclose<CR>
-
 " turn &cursorline on only in GUI && normal mode
 if exists("&cursorline")
-    set cursorline
-    autocmd InsertLeave * set cursorline                    
-    autocmd InsertEnter * set nocursorline
+  set cursorline
+  autocmd InsertLeave * set cursorline                    
+  autocmd InsertEnter * set nocursorline
 endif
 
 "mark.vim should be re-sourced after any changing to colors. For example, if you
@@ -84,5 +69,21 @@ endif
 " following config to make gvim startup faster
 set guiheadroom=0
 
-set guioptions-=mTrRlLb
+set guioptions-=m
+set guioptions-=T
+set guioptions-=r
+set guioptions-=R
+set guioptions-=l
+set guioptions-=L
+set guioptions-=b
+
+set showtabline=0
+
+"if exists(":macmenu")
+  ":map ,, :call ToggleTransparency()<CR>
+  macmenu Edit.Find.Find\.\.\. key=<nop> " free up <Cmd-F> for fullscreen
+  macmenu Window.Toggle\ Full\ Screen\ Mode key=<D-f>
+"endif
+
+set fullscreen
 

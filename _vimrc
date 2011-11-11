@@ -194,7 +194,6 @@ endif
     :vnoremap > >gv 
 
     " general key maps 
-
     "### got following tip from http://www.vim.org/tips/tip.php?tip_id=1
     " Search for selected text in visual mode with */#
     " effect: overrides unnamed register
@@ -270,7 +269,7 @@ endif
     " use enter to unhighlighted searched-for text
     "nnoremap <CR> :nohlsearch<CR><CR>
     "nnoremap <CR> :set invhlsearch<CR><CR>
-    nnoremap ,nh    :nohlsearch<CR>
+    nnoremap <silent> ,<space>    :nohlsearch<CR>
     nnoremap <leader>q :close<CR>
 
     " mappings for quickfix mode 
@@ -385,10 +384,8 @@ endif
     imap <F1> <C-O><F1>
     set pastetoggle=<F1>
 
-
     " http://vim.wikia.com/wiki/Set_working_directory_to_the_current_file
     map ,cd :cd %:p:h<CR>
-
 
     " use :w!! to write to a file using sudo if you forgot to 'sudo vim file'
     " (it will prompt for sudo password when writing)
@@ -409,8 +406,8 @@ endif
     " from vim tip wiki: http://vim.wikia.com/wiki/View_text_file_in_two_columns
     :noremap <silent> <leader>vs :<C-u>let @z=&so<CR>:set so=0 noscb<CR>:bo vs<CR>Ljzt:setl scb<CR><C-w>p:setl scb<CR>:let &so=@z<CR>
 
-    " does not need to press <shift> so much when ':w'
-    "nnoremap ; :
+    nnoremap <silent> ;;  :w<CR>
+    nnoremap <silent> ,,  :wa<CR>
 
 "## }}}1
 
@@ -718,12 +715,14 @@ endif
         ":set complete+=k/usr/dict/*,k$VIM/vimfiles/dictionary/*
         
         " set grep program 
-        :set grepprg=grep\ -n
+        ":set grepprg=grep\ -n
+        :set grepprg=/opt/local/bin/grep\ -n
+
 
         " extends manpageview to support reading pydoc in vim
         " manpageview is very extensible especially for man like 
         " doc utilities(perldoc, pydoc etc)
-        let g:manpageview_pgm_py = "pydoc"
+        let g:manpageview_pgm_py = "/opt/local/bin/pydoc"
 
     " linux setting end 
     endif "}}}2
@@ -813,7 +812,8 @@ if has("autocmd")
         :au BufNewFile,BufRead *.lzx let g:snip_end_tag = "@"
 
         :au BufEnter *.lzx :call FoldOnRegex('^\s*<\w\+', 0)
-        :au BufEnter *.py  :call FoldOnRegex('^\s*\(\<def\>\|\<class\>\)', 0)
+        ":au BufEnter *.py  :call FoldOnRegex('^\s*\(\<def\>\|\<class\>\)', 0)
+        
         " remove trailing whitespace automatically
         :au BufWritePre *.py :%s/\s\+$//e 
 
@@ -1222,8 +1222,7 @@ endif " has("autocmd")
 
     "## Plugin related settings {{{1
     
-    call pathogen#helptags()
-    call pathogen#runtime_append_all_bundles() 
+    call pathogen#infect() 
 
     "### setting for winmanager.vim {{{2
         ":let g:winManagerWindowLayout = "FileExplorer,TagsExplorer|BufExplorer"
@@ -1293,9 +1292,9 @@ endif " has("autocmd")
     "### setting for grep.vim {{{2
     let Grep_Key = '<F12>'
     let Grep_Default_Options = '-inH'
-    let Grep_Skip_Dirs_List = ['.svn', '.cvs', 'zope', '.git']
+    let Grep_Skip_Dirs_List = ['.svn', '.cvs', 'zope', '.git', '.cache']
     let Grep_Skip_Dirs = join(g:Grep_Skip_Dirs_List, ' ')
-    let Grep_Skip_Files_List = ['*.bak', '*~', '*.swp', '*.swo', '*.pyc', '*.swf', '*.exe', 'tags', 'TAGS']
+    let Grep_Skip_Files_List = ['*.bak', '*~', '*.swp', '*.swo', '*.pyc', '*.swf', '*.exe', 'tags', 'TAGS', 'ftags', '*.log']
     let Grep_Skip_Files = join(Grep_Skip_Files_List, ' ')
     let Grep_Default_Filelist_List = ['*']
     let Grep_Default_Filelist = join(Grep_Default_Filelist_List, ' ')
@@ -1348,7 +1347,7 @@ endif " has("autocmd")
     "   call IMAP ('date`', "\<c-r>=strftime('%b %d %Y')\<cr>", '')
     " read the docs of imaps.vim to get more details
     "let g:disable_imap = 1 
-    imap <C-g>   <plug>IMAP_JumpForward
+    "imap <C-g>   <plug>IMAP_JumpForward
     "### }}}2   
 
     "### setting for netrw.vim {{{2
@@ -1453,8 +1452,8 @@ endif " has("autocmd")
     let g:fuf_modesDisable = [ 'mrufile', 'mrucmd', 'coveragefile', 'help']
 
     let g:fuf_abbrevMap = 
-                \    { "^,w" : [$PROJECT_DIR, "~/work/git/crawlware"],
-                \      "^,g" : ["~/work/git"],
+                \    { "^,a" : [$PROJECT_DIR, "~/workspace/auction"],
+                \      "^,w" : ["~/workspace/zhiyong/web"],
                 \      "^,v" : map(filter(split(&runtimepath, ','), 'v:val !~ "after$"'), 'v:val . ''/**/'''),
                 \      "^,r" : ["app/models", "app/views", "app/controllers", "test/functional", "test/integration", "test/unit", "test/fixtures", "db/fixtures"],
                 \      "^,u" : [$PROJECT_DIR . "/../ui_design/template/feb2010/html/02 - current/"],
@@ -1686,6 +1685,7 @@ endif " has("autocmd")
 
     "### settings for vimwiki {{{2
     let g:vimwiki_menu = "Plugin.Vimwiki"
+    let g:vimwiki_list = [{'path': '~/workspace/auction/client/notes/', 'path_html': '~/workspace/auction/client/notes/html'}, {}]
     "}}}2
 
     "### settings for autotag {{{2
@@ -1777,8 +1777,13 @@ endif " has("autocmd")
     let g:xptemplate_pum_tab_nav = 1
     "}}}2
     
-    "### reload {{2
+     
+    "### reload scrit {{{2
     let g:reload_on_write = 0 "disable reload by default, use :ReloadScript manually
+    "}}}2
+    
+    "### EasyMotion {{{2
+    let g:EasyMotion_leader_key = ';'
     "}}}2
 
 "## }}}1
@@ -2054,6 +2059,16 @@ function! TabMessage(cmd)
   set nomodified 
 endfunction 
 command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>) 
+"## }}}1
+
+"## MacVim Related {{{1 
+if has("gui_macvim")
+  set fuoptions=maxvert,maxhorz,background:Normal
+  set lines=39 columns=157
+
+  map <D-t> :tabnew<CR>
+  map <D-w> :tabclose<CR>
+endif
 "## }}}1
 
 if filereadable(expand('~/.vimrc.local'))
