@@ -79,11 +79,8 @@ set guioptions-=b
 
 set showtabline=0
 
-"if exists(":macmenu")
-  ":map ,, :call ToggleTransparency()<CR>
-  macmenu Edit.Find.Find\.\.\. key=<nop> " free up <Cmd-F> for fullscreen
-  macmenu Window.Toggle\ Full\ Screen\ Mode key=<D-f>
-"endif
+macmenu Edit.Find.Find\.\.\. key=<nop> " free up <Cmd-F> for fullscreen
+macmenu Window.Toggle\ Full\ Screen\ Mode key=<D-f>
 
 set fullscreen
 

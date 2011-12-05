@@ -63,7 +63,8 @@ if exists("g:mypyini")
 endif
 
 let g:mypyini = 1
-let g:PyInitFold = 1 
+
+let g:pyflakes_use_quickfix = 0
 
 "############################################################################
 "#    FUNCTIONS 

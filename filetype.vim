@@ -46,4 +46,5 @@ augroup filetypedetect
   autocmd BufRead,BufNewFile *.otl set ts=2
 
   autocmd BufRead,BufNewFile *.rfc* setfiletype rfc
+  autocmd BufRead,BufNewFile *.penta setfiletype pentadactyl
 augroup END
